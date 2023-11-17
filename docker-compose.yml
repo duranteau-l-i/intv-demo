@@ -1,0 +1,44 @@
+version: '3'
+services:
+  db:
+    image: postgres:14
+    container_name: 'intv-demo-postgres'
+    restart: always
+    ports:
+      - '5432:5432'
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: intv-demo
+    volumes:
+      - ./docker-compose-data:/var/lib/postgresql/data
+
+  db-test:
+    image: postgres:14
+    container_name: 'intv-demo-postgres-test'
+    restart: always
+    ports:
+      - '5433:5432'
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: intv-demo-test
+
+  redis:
+    image: redis:alpine
+    container_name: 'intv-demo-redis'
+    restart: always
+    ports:
+      - '6379:6379'
+    volumes:
+      - ./docker-compose-data:/var/lib/cache/data
+    networks:
+      - webnet
+
+networks:
+  db:
+    driver: local
+  db-test:
+    driver: local
+  webnet:
+    driver: bridge
