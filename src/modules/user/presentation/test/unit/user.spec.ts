@@ -5,6 +5,8 @@ import UserInMemoryRepository from '../../../infrastructure/UserInMemoryReposito
 
 import User, { Role } from '../../../domain/model/User';
 import { OrderBy } from '../../../../../common/types/pagination';
+import UserError from '../../../domain/error';
+import { ErrorType } from '../../../../../common/errors/CustomError';
 
 describe('User', () => {
   let userQueries: UserQueries;
@@ -165,6 +167,71 @@ describe('User', () => {
           }),
         ],
       });
+    });
+  });
+
+  describe('getUserById', () => {
+    it('should return an user', async () => {
+      const user1 = new User({
+        id: 'user1',
+        firstName: 'john',
+        lastName: 'doe',
+        email: 'user1@test.com',
+        username: 'user1',
+        password: '123456',
+        role: Role.admin,
+      });
+      const user2 = new User({
+        id: 'user2',
+        firstName: 'steve',
+        lastName: 'artist',
+        email: 'user1@test.com',
+        username: 'user2',
+        password: '123456',
+        role: Role.editor,
+      });
+
+      userRepository.seedUsers([user1, user2]);
+      const users = await userQueries.getUserById(user1.id);
+
+      expect(users).toEqual(
+        new User({
+          id: 'user1',
+          firstName: 'john',
+          lastName: 'doe',
+          email: 'user1@test.com',
+          username: 'user1',
+          password: '123456',
+          role: Role.admin,
+        }),
+      );
+    });
+
+    it('should return an user', async () => {
+      const user1 = new User({
+        id: 'user1',
+        firstName: 'john',
+        lastName: 'doe',
+        email: 'user1@test.com',
+        username: 'user1',
+        password: '123456',
+        role: Role.admin,
+      });
+      const user2 = new User({
+        id: 'user2',
+        firstName: 'steve',
+        lastName: 'artist',
+        email: 'user1@test.com',
+        username: 'user2',
+        password: '123456',
+        role: Role.editor,
+      });
+
+      userRepository.seedUsers([user1, user2]);
+
+      await expect(userQueries.getUserById('wrong-id')).rejects.toThrowError(
+        UserError[ErrorType.notFound].byId,
+      );
     });
   });
 });

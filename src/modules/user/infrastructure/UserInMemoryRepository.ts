@@ -1,8 +1,10 @@
+import CustomError, { ErrorType } from '../../../common/errors/CustomError';
 import {
   PaginationOptions,
   PaginationResponse,
   pagination,
 } from '../../../common/types';
+import UserError from '../domain/error';
 
 import User from '../domain/model/User';
 import IUserRepository, {
@@ -53,7 +55,19 @@ class UserRepository implements IUserRepository {
   }
 
   async getUserById(id: string): Promise<User> {
-    throw new Error('Method not implemented.');
+    try {
+      const user = this.users.find((u) => u.id === id);
+
+      if (!user)
+        throw new CustomError({
+          type: ErrorType.notFound,
+          message: UserError[ErrorType.notFound].byId,
+        });
+
+      return user;
+    } catch (error) {
+      throw error;
+    }
   }
 
   async createUser(user: User): Promise<User> {

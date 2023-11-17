@@ -8,7 +8,7 @@ import {
   UnprocessableEntityException,
 } from '@nestjs/common';
 
-import CustomError from './CustomError';
+import CustomError, { ErrorType } from './CustomError';
 
 class HttpExceptions {
   constructor(private error: CustomError | Error) {}
@@ -19,26 +19,26 @@ class HttpExceptions {
     }
 
     switch (this.error.type) {
-      case 400:
+      case ErrorType.badRequest:
         return new BadRequestException(this.error.message);
 
-      case 401:
+      case ErrorType.unauthorized:
         return new UnauthorizedException(this.error.message);
 
-      case 403:
+      case ErrorType.forbidden:
         return new ForbiddenException(this.error.message);
 
-      case 404:
+      case ErrorType.notFound:
         return new NotFoundException(this.error.message);
 
-      case 422:
+      case ErrorType.unprocessableEntity:
         return new UnprocessableEntityException(this.error.message);
 
-      case 500:
+      case ErrorType.internalServerError:
         return new InternalServerErrorException(this.error.message);
 
       default:
-        return new BadRequestException(this.error.message);
+        return new InternalServerErrorException(this.error.message);
     }
   }
 }
