@@ -1,3 +1,3 @@
 export abstract class ValueObject<T> {
-  readonly value: T;
+  readonly props: T;
 }

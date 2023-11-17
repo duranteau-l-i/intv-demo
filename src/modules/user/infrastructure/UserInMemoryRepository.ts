@@ -71,7 +71,9 @@ class UserRepository implements IUserRepository {
   }
 
   async createUser(user: User): Promise<User> {
-    throw new Error('Method not implemented.');
+    this.users.push(user);
+
+    return user;
   }
 
   async updateUser(user: User): Promise<User> {
