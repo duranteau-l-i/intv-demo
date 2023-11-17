@@ -52,8 +52,16 @@ class User extends Entity<User> {
     return this._firstName;
   }
 
+  set firstName(value: string) {
+    this._firstName = this.checkIfHasMinimumLength('firstName', value);
+  }
+
   get lastName(): string {
     return this._lastName;
+  }
+
+  set lastName(value: string) {
+    this._lastName = this.checkIfHasMinimumLength('lastName', value);
   }
 
   get email(): string {

@@ -77,7 +77,11 @@ class UserRepository implements IUserRepository {
   }
 
   async updateUser(user: User): Promise<User> {
-    throw new Error('Method not implemented.');
+    const userIndex = this.users.findIndex((u) => u.id === user.id);
+
+    this.users[userIndex] = user;
+
+    return user;
   }
 
   async removeUser(id: string): Promise<void> {

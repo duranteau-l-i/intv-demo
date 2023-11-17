@@ -284,7 +284,7 @@ describe('User', () => {
       );
     });
 
-    it('should return an error if the firstName length is less than 3 characters', async () => {
+    it('should return an error if the username length is less than 3 characters', async () => {
       userRepository.seedUsers([]);
 
       const user1 = {
@@ -335,6 +335,80 @@ describe('User', () => {
 
       await expect(userCommands.createUser(user1)).rejects.toThrowError(
         UserError[ErrorType.badRequest].notValidEmailAddress,
+      );
+    });
+  });
+
+  describe('updateUser', () => {
+    it('should return an user', async () => {
+      const user1 = new User({
+        id: 'user1',
+        firstName: 'john',
+        lastName: 'doe',
+        email: 'user1@test.com',
+        username: 'user1',
+        password: 'Abcd1!',
+        role: Role.admin,
+      });
+
+      userRepository.seedUsers([user1]);
+
+      const user = await userCommands.updateUser(user1.id, {
+        firstName: 'john updated',
+        lastName: 'doe updated',
+      });
+
+      expect(userToViewModel(user)).toEqual({
+        id: 'user1',
+        firstName: 'john updated',
+        lastName: 'doe updated',
+        email: 'user1@test.com',
+        username: 'user1',
+        role: Role.admin,
+      });
+    });
+
+    it('should return an error if the firstName length is less than 3 characters', async () => {
+      const user1 = new User({
+        id: 'user1',
+        firstName: 'john',
+        lastName: 'doe',
+        email: 'user1@test.com',
+        username: 'user1',
+        password: 'Abcd1!',
+        role: Role.admin,
+      });
+
+      userRepository.seedUsers([user1]);
+
+      await expect(
+        userCommands.updateUser(user1.id, {
+          firstName: 'jo',
+        }),
+      ).rejects.toThrowError(
+        UserError[ErrorType.badRequest].minLength('firstName'),
+      );
+    });
+
+    it('should return an error if the lastName length is less than 3 characters', async () => {
+      const user1 = new User({
+        id: 'user1',
+        firstName: 'john',
+        lastName: 'doe',
+        email: 'user1@test.com',
+        username: 'user1',
+        password: 'Abcd1!',
+        role: Role.admin,
+      });
+
+      userRepository.seedUsers([user1]);
+
+      await expect(
+        userCommands.updateUser(user1.id, {
+          lastName: 'do',
+        }),
+      ).rejects.toThrowError(
+        UserError[ErrorType.badRequest].minLength('lastName'),
       );
     });
   });
