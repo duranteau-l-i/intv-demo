@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Patch,
@@ -80,6 +81,15 @@ class UserController {
       );
 
       return userToViewModel(user);
+    } catch (error) {
+      throw new HttpExceptions(error).exception();
+    }
+  }
+
+  @Delete('/:id')
+  async removeUser(@Param() params: { id: string }): Promise<void> {
+    try {
+      return await this.userCommands.removeUser(params.id);
     } catch (error) {
       throw new HttpExceptions(error).exception();
     }

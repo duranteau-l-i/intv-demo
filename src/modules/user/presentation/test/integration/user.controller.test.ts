@@ -34,7 +34,6 @@ describe('User', () => {
           database: process.env.DB_DATABASE_TEST,
           entities: [UserEntity],
           synchronize: true,
-          // name: 'main_db',
         }),
         TypeOrmModule.forFeature([UserEntity]),
       ],
@@ -170,6 +169,97 @@ describe('User', () => {
         email: 'user1@test.com',
         username: 'user1',
         role: 'admin',
+      });
+  });
+
+  it(`/POST users`, () => {
+    return request(server)
+      .post('/users')
+      .send({
+        id: 'user2',
+        firstName: 'steve',
+        lastName: 'artist',
+        email: 'user1@test.com',
+        username: 'user2',
+        password: 'Abcd1!',
+        role: Role.editor,
+      })
+      .expect(201)
+      .expect({
+        id: 'user2',
+        firstName: 'steve',
+        lastName: 'artist',
+        email: 'user1@test.com',
+        username: 'user2',
+        role: Role.editor,
+      });
+  });
+
+  it(`/GET users`, () => {
+    return request(server)
+      .get('/users')
+      .expect(200)
+      .expect({
+        data: [
+          {
+            id: 'user1',
+            firstName: 'steve',
+            lastName: 'doe',
+            email: 'user1@test.com',
+            username: 'user1',
+            role: Role.admin,
+          },
+          {
+            id: 'user2',
+            firstName: 'steve',
+            lastName: 'artist',
+            email: 'user1@test.com',
+            username: 'user2',
+            role: Role.editor,
+          },
+        ],
+        count: 2,
+        pages: 1,
+        orderBy: 'ASC',
+        orderValue: 'username',
+        perPage: 10,
+        page: 1,
+      });
+  });
+
+  it(`/DELETE users/:id`, () => {
+    return request(server).delete('/users/user2').expect(200);
+  });
+
+  it(`/DELETE users/:id`, () => {
+    return request(server).delete('/users/user3').expect(404).expect({
+      statusCode: 404,
+      message: UserError[ErrorType.notFound].byId,
+      error: 'Not Found',
+    });
+  });
+
+  it(`/GET users`, () => {
+    return request(server)
+      .get('/users')
+      .expect(200)
+      .expect({
+        data: [
+          {
+            id: 'user1',
+            firstName: 'steve',
+            lastName: 'doe',
+            email: 'user1@test.com',
+            username: 'user1',
+            role: Role.admin,
+          },
+        ],
+        count: 1,
+        pages: 1,
+        orderBy: 'ASC',
+        orderValue: 'username',
+        perPage: 10,
+        page: 1,
       });
   });
 });

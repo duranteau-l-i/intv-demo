@@ -105,7 +105,23 @@ class UserRepository implements IUserRepository {
   }
 
   async removeUser(id: string): Promise<void> {
-    throw new Error('Method not implemented.');
+    const user = await this.dataSource
+      .createQueryBuilder(UserEntity, 'user')
+      .where('user.id = :id', { id })
+      .getOne();
+
+    if (!user)
+      throw new CustomError({
+        type: ErrorType.notFound,
+        message: UserError[ErrorType.notFound].byId,
+      });
+
+    await this.dataSource
+      .createQueryBuilder()
+      .delete()
+      .from(UserEntity)
+      .where({ id })
+      .execute();
   }
 }
 

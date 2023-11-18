@@ -21,7 +21,6 @@ import UserEntity from './modules/user/infrastructure/entities/User.entity';
       autoLoadEntities: true,
       entities: [UserEntity],
       synchronize: true, // remove in prod
-      // name: 'main_db',
     }),
 
     UsersModule,
