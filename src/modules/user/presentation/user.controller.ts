@@ -1,29 +1,85 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
+} from '@nestjs/common';
 
 import HttpExceptions from '../../../common/errors/HttpExceptions';
 import { PaginationOptions, PaginationResponse } from '../../../common/types';
 
 import UserQueries from '../application/user.queries';
-import User from '../domain/model/User';
+import { UserViewModel, userToViewModel } from './mapper/user.mapper';
+import UserCommands from '../application/user.commands';
+import CreateUserDTO from './dto/CreateUser';
+import { UserProps } from '../domain/model/User';
+import UpdateUserDTO from './dto/UpdateUser';
 
-@Controller('/user')
+@Controller('/users')
 class UserController {
-  constructor(private readonly userQueries: UserQueries) {}
+  constructor(
+    private readonly userQueries: UserQueries,
+    private readonly userCommands: UserCommands,
+  ) {}
 
   @Get()
   async getUsers(
     @Query()
     queryParams?: PaginationOptions,
-  ): Promise<PaginationResponse<User>> {
+  ): Promise<PaginationResponse<UserViewModel>> {
     try {
       const response = await this.userQueries.getUsers(queryParams);
 
-      return response;
+      return {
+        ...response,
+        data: response.data.map((user) => userToViewModel(user)),
+      };
+    } catch (error) {
+      throw new HttpExceptions(error).exception();
+    }
+  }
 
-      // return {
-      //   ...response,
-      //   data: response.data.map((user) => user.toJSON()),
-      // };
+  @Get('/:id')
+  async getUserById(@Param() params: { id: string }): Promise<UserViewModel> {
+    try {
+      const user = await this.userQueries.getUserById(params.id);
+
+      return userToViewModel(user);
+    } catch (error) {
+      throw new HttpExceptions(error).exception();
+    }
+  }
+
+  @Post()
+  async createUser(
+    @Body() createUserDTO: CreateUserDTO,
+  ): Promise<UserViewModel> {
+    try {
+      const user = await this.userCommands.createUser(
+        createUserDTO as UserProps,
+      );
+
+      return userToViewModel(user);
+    } catch (error) {
+      throw new HttpExceptions(error).exception();
+    }
+  }
+
+  @Patch('/:id')
+  async updateUser(
+    @Param() params: { id: string },
+    @Body() updateUserDTO: UpdateUserDTO,
+  ): Promise<UserViewModel> {
+    try {
+      const user = await this.userCommands.updateUser(
+        params.id,
+        updateUserDTO as Partial<UserProps>,
+      );
+
+      return userToViewModel(user);
     } catch (error) {
       throw new HttpExceptions(error).exception();
     }

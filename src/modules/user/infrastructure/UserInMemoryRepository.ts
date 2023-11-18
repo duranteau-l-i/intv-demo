@@ -55,19 +55,15 @@ class UserRepository implements IUserRepository {
   }
 
   async getUserById(id: string): Promise<User> {
-    try {
-      const user = this.users.find((u) => u.id === id);
+    const user = this.users.find((u) => u.id === id);
 
-      if (!user)
-        throw new CustomError({
-          type: ErrorType.notFound,
-          message: UserError[ErrorType.notFound].byId,
-        });
+    if (!user)
+      throw new CustomError({
+        type: ErrorType.notFound,
+        message: UserError[ErrorType.notFound].byId,
+      });
 
-      return user;
-    } catch (error) {
-      throw error;
-    }
+    return user;
   }
 
   async createUser(user: User): Promise<User> {

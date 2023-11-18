@@ -8,7 +8,6 @@ import User, { Role, UserProps } from '../../../domain/model/User';
 import { OrderBy } from '../../../../../common/types/pagination';
 import UserError from '../../../domain/error';
 import { ErrorType } from '../../../../../common/errors/CustomError';
-import Password from '../../../domain/model/Password';
 import { userToViewModel } from '../../mapper/user.mapper';
 
 describe('User', () => {
