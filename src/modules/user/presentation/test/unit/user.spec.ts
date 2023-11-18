@@ -411,4 +411,90 @@ describe('User', () => {
       );
     });
   });
+
+  describe('removeUser', () => {
+    it('should return the list without user2', async () => {
+      const user1 = new User({
+        id: 'user1',
+        firstName: 'john',
+        lastName: 'doe',
+        email: 'user1@test.com',
+        username: 'user1',
+        password: 'Abcd1!',
+        role: Role.admin,
+      });
+      const user2 = new User({
+        id: 'user2',
+        firstName: 'steve',
+        lastName: 'artist',
+        email: 'user1@test.com',
+        username: 'user2',
+        password: 'Abcd1!',
+        role: Role.editor,
+      });
+
+      userRepository.seedUsers([user1, user2]);
+      await userCommands.removeUser(user2.id);
+
+      expect(userRepository.users).toEqual([
+        new User({
+          id: 'user1',
+          firstName: 'john',
+          lastName: 'doe',
+          email: 'user1@test.com',
+          username: 'user1',
+          password: 'Abcd1!',
+          role: Role.admin,
+        }),
+      ]);
+    });
+
+    it('should return an error user not found', async () => {
+      const user1 = new User({
+        id: 'user1',
+        firstName: 'john',
+        lastName: 'doe',
+        email: 'user1@test.com',
+        username: 'user1',
+        password: 'Abcd1!',
+        role: Role.admin,
+      });
+      const user2 = new User({
+        id: 'user2',
+        firstName: 'steve',
+        lastName: 'artist',
+        email: 'user1@test.com',
+        username: 'user2',
+        password: 'Abcd1!',
+        role: Role.editor,
+      });
+
+      userRepository.seedUsers([user1, user2]);
+
+      await expect(userCommands.removeUser('wrong-id')).rejects.toThrowError(
+        UserError[ErrorType.notFound].byId,
+      );
+
+      expect(userRepository.users).toEqual([
+        new User({
+          id: 'user1',
+          firstName: 'john',
+          lastName: 'doe',
+          email: 'user1@test.com',
+          username: 'user1',
+          password: 'Abcd1!',
+          role: Role.admin,
+        }),
+        new User({
+          id: 'user2',
+          firstName: 'steve',
+          lastName: 'artist',
+          email: 'user1@test.com',
+          username: 'user2',
+          password: 'Abcd1!',
+          role: Role.editor,
+        }),
+      ]);
+    });
+  });
 });

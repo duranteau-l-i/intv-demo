@@ -1,6 +1,6 @@
-import { ICommandHandler } from '../../../../common/domain/CommandHandler';
-import User from '../../domain/model/User';
-import IUserRepository from '../../domain/user.repository';
+import { ICommandHandler } from '../../../../../common/domain/CommandHandler';
+import User from '../../../domain/model/User';
+import IUserRepository from '../../../domain/user.repository';
 import UpdateUserCommand from './UpdateUser.command';
 
 class UpdateUserCommandHandler implements ICommandHandler {

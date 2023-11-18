@@ -1,4 +1,4 @@
-import { UserProps } from '../../domain/model/User';
+import { UserProps } from '../../../domain/model/User';
 
 class UpdateUserCommand {
   id: string;

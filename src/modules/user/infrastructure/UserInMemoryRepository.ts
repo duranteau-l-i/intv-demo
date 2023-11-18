@@ -81,7 +81,15 @@ class UserRepository implements IUserRepository {
   }
 
   async removeUser(id: string): Promise<void> {
-    throw new Error('Method not implemented.');
+    const user = this.users.find((u) => u.id === id);
+
+    if (!user)
+      throw new CustomError({
+        type: ErrorType.notFound,
+        message: UserError[ErrorType.notFound].byId,
+      });
+
+    this.users = this.users.filter((user) => user.id !== id);
   }
 }
 
