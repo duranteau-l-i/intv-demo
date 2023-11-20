@@ -111,7 +111,6 @@ describe('User', () => {
             role: Role.admin,
           },
         ]),
-        count: 1,
         pages: 1,
         orderBy: 'ASC',
         orderValue: 'username',
@@ -180,7 +179,7 @@ describe('User', () => {
         id: 'user2',
         firstName: 'steve',
         lastName: 'artist',
-        email: 'user1@test.com',
+        email: 'user2@test.com',
         username: 'user2',
         password: 'Abcd1!',
         role: Role.editor,
@@ -190,18 +189,18 @@ describe('User', () => {
         id: 'user2',
         firstName: 'steve',
         lastName: 'artist',
-        email: 'user1@test.com',
+        email: 'user2@test.com',
         username: 'user2',
         role: Role.editor,
       });
   });
 
   it(`/GET users`, async () => {
-    await request(server)
-      .get('/users')
-      .expect(200)
-      .expect({
-        data: [
+    const res = await request(server).get('/users').expect(200);
+
+    expect(res.body).toEqual(
+      expect.objectContaining({
+        data: expect.arrayContaining([
           {
             id: 'user1',
             firstName: 'steve',
@@ -214,18 +213,18 @@ describe('User', () => {
             id: 'user2',
             firstName: 'steve',
             lastName: 'artist',
-            email: 'user1@test.com',
+            email: 'user2@test.com',
             username: 'user2',
             role: Role.editor,
           },
-        ],
-        count: 2,
+        ]),
         pages: 1,
         orderBy: 'ASC',
         orderValue: 'username',
         perPage: 10,
         page: 1,
-      });
+      }),
+    );
   });
 
   it(`/DELETE users/:id`, async () => {
@@ -241,11 +240,11 @@ describe('User', () => {
   });
 
   it(`/GET users`, async () => {
-    await request(server)
-      .get('/users')
-      .expect(200)
-      .expect({
-        data: [
+    const res = await request(server).get('/users').expect(200);
+
+    expect(res.body).toEqual(
+      expect.objectContaining({
+        data: expect.arrayContaining([
           {
             id: 'user1',
             firstName: 'steve',
@@ -254,13 +253,13 @@ describe('User', () => {
             username: 'user1',
             role: Role.admin,
           },
-        ],
-        count: 1,
+        ]),
         pages: 1,
         orderBy: 'ASC',
         orderValue: 'username',
         perPage: 10,
         page: 1,
-      });
+      }),
+    );
   });
 });

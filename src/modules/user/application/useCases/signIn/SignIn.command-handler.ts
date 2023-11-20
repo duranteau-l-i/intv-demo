@@ -34,6 +34,9 @@ class SignInCommandHandler implements ICommandHandler {
 
       await token.setHashedRefreshToken();
 
+      user.refreshToken = token.hashedRefreshToken;
+      await this.userRepository.updateUser(user);
+
       return {
         accessToken: token.accessToken,
         refreshToken: token.hashedRefreshToken,

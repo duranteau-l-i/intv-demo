@@ -15,7 +15,7 @@ import {
   RefreshTokenStrategy,
 } from '../../../../../common/guards';
 
-describe('User', () => {
+describe('Auth', () => {
   let app: INestApplication;
   let dataSource: DataSource;
   let server: INestApplication;
@@ -71,7 +71,7 @@ describe('User', () => {
       .send({
         firstName: 'john',
         lastName: 'doe',
-        email: 'user1@test.com',
+        email: 'userAuth1@test.com',
         username: 'userAuth1',
         password: 'Abcd1!',
         role: Role.admin,

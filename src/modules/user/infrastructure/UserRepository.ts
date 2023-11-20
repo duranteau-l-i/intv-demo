@@ -108,6 +108,7 @@ class UserRepository implements IUserRepository {
       .set({
         firstName: user.firstName,
         lastName: user.lastName,
+        refreshToken: user.refreshToken,
       })
       .execute();
 
