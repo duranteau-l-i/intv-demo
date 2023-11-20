@@ -65,7 +65,7 @@ describe('User', () => {
     server.close();
   });
 
-  it(`/POST auth`, async () => {
+  it(`/POST signUp`, async () => {
     const res = await request(server)
       .post('/auth/signup')
       .send({
@@ -75,6 +75,19 @@ describe('User', () => {
         username: 'userAuth1',
         password: 'Abcd1!',
         role: Role.admin,
+      })
+      .expect(201);
+
+    expect(res.body.accessToken).not.toBeNull();
+    expect(res.body.refreshToken).not.toBeNull();
+  });
+
+  it(`/POST signIn - wrong password`, async () => {
+    const res = await request(server)
+      .post('/auth/signin')
+      .send({
+        username: 'userAuth1',
+        password: 'Abcd1!',
       })
       .expect(201);
 
