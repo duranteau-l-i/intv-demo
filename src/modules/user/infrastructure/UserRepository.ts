@@ -71,6 +71,15 @@ class UserRepository implements IUserRepository {
     return userToDomain(user);
   }
 
+  async getUserByUsername(username: string): Promise<User> {
+    const user = await this.dataSource
+      .createQueryBuilder(UserEntity, 'user')
+      .where('user.username = :username', { username })
+      .getOne();
+
+    return user ? userToDomain(user) : null;
+  }
+
   async createUser(user: User): Promise<User> {
     await this.dataSource
       .createQueryBuilder()

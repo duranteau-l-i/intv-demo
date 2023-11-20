@@ -33,6 +33,10 @@ class CreateUserDTO {
   @IsOptional()
   @IsString()
   role?: Role;
+
+  @IsOptional()
+  @IsString()
+  refreshToken?: string;
 }
 
 export default CreateUserDTO;

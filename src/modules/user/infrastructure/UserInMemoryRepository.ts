@@ -66,6 +66,12 @@ class UserRepository implements IUserRepository {
     return user;
   }
 
+  async getUserByUsername(username: string): Promise<User> {
+    const user = this.users.find((u) => u.username === username);
+
+    return user;
+  }
+
   async createUser(user: User): Promise<User> {
     this.users.push(user);
 

@@ -8,6 +8,7 @@ export const USER_ORDER_DEFAULT_VALUE = 'username';
 interface IUserRepository {
   getUsers(options?: PaginationOptions): Promise<PaginationResponse<User>>;
   getUserById(id: string): Promise<User>;
+  getUserByUsername(username: string): Promise<User>;
   createUser(user: User): Promise<User>;
   updateUser(user: User): Promise<User>;
   removeUser(id: string): Promise<void>;

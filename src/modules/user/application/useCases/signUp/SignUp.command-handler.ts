@@ -1,17 +1,16 @@
+import { ICommandHandler } from '../../../../../common/domain/CommandHandler';
 import CustomError, {
   ErrorType,
 } from '../../../../../common/errors/CustomError';
-import { ICommandHandler } from '../../../../../common/domain/CommandHandler';
 
-import User from '../../../domain/model/User';
-import UserError from '../../../domain/error';
 import IUserRepository from '../../../domain/user.repository';
-import CreateUserCommand from './CreateUser.command';
+import UserError from '../../../domain/error';
+import CreateUserCommand from './SignUp.command';
 
 class CreateUserCommandHandler implements ICommandHandler {
   constructor(private userRepository: IUserRepository) {}
 
-  async handle(command: CreateUserCommand): Promise<User> {
+  async handle(command: CreateUserCommand): Promise<string> {
     await command.createUserEntity();
 
     const userExists = await this.userRepository.getUserByUsername(
@@ -24,7 +23,9 @@ class CreateUserCommandHandler implements ICommandHandler {
       });
     }
 
-    return this.userRepository.createUser(command.user);
+    const user = await this.userRepository.createUser(command.user);
+
+    return user.refreshToken;
   }
 }
 

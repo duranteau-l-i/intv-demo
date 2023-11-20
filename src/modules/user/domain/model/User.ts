@@ -19,6 +19,7 @@ export type UserProps = {
   username: string;
   password: string;
   role: Role;
+  refreshToken?: string;
 };
 
 class User extends Entity<User> {
@@ -28,6 +29,7 @@ class User extends Entity<User> {
   _username: string;
   _password: string;
   _role: Role;
+  _refreshToken: string = null;
 
   constructor(props: UserProps) {
     super(props.id);
@@ -42,6 +44,7 @@ class User extends Entity<User> {
     this._password = props.password;
     this._email = new EmailAddress(props.email).value;
     this._role = this.defaultRole(props.role);
+    if (props.refreshToken) this._refreshToken = props.refreshToken;
   }
 
   get id(): uuidv4 {
@@ -83,6 +86,14 @@ class User extends Entity<User> {
   defaultRole(role: Role | null) {
     if (!Object.values(Role).includes(role)) return Role.user;
     return role;
+  }
+
+  get refreshToken(): string {
+    return this._refreshToken;
+  }
+
+  set refreshToken(value: string) {
+    this._refreshToken = value;
   }
 
   checkIfHasMinimumLength(field: string, value: string) {

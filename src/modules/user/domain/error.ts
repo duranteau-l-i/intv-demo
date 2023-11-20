@@ -10,6 +10,7 @@ const UserError = {
     notValidEmailAddress: 'Not a valid email address',
     notValidPassword:
       'The password must be at least 6 characters long and contain at least one capital letter and one special character',
+    userAlreadyExists: 'The user already exists',
   },
 };
 

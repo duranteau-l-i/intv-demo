@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { UsersModule } from './modules/user/app.module';
+import { UserModule } from './modules/user/user.module';
 import UserEntity from './modules/user/infrastructure/entities/User.entity';
 
 @Module({
@@ -23,7 +23,7 @@ import UserEntity from './modules/user/infrastructure/entities/User.entity';
       synchronize: true, // remove in prod
     }),
 
-    UsersModule,
+    UserModule,
   ],
 })
 export class AppModule {}
