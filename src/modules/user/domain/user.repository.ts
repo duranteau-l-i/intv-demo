@@ -1,6 +1,6 @@
 import { PaginationOptions, PaginationResponse } from '../../../common/types';
 
-import User from './model/User';
+import { User } from './model';
 
 export const USER_ORDER_VALUES = ['username', 'firstName', 'lastName'];
 export const USER_ORDER_DEFAULT_VALUE = 'username';

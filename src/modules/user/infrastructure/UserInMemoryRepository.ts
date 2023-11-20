@@ -6,7 +6,7 @@ import {
 } from '../../../common/types';
 import UserError from '../domain/error';
 
-import User from '../domain/model/User';
+import { User } from '../domain/model';
 import IUserRepository, {
   USER_ORDER_DEFAULT_VALUE,
   USER_ORDER_VALUES,

@@ -1,6 +1,6 @@
 import Token from '../../../domain/model/Token';
 import Password from '../../../domain/model/Password';
-import User, { Role, UserProps } from '../../../domain/model/User';
+import { User, Role, UserProps } from '../../../domain/model';
 
 class SignUpCommand {
   userProps: UserProps;

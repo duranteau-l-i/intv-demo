@@ -1,5 +1,5 @@
 import Password from '../../../domain/model/Password';
-import User, { Role, UserProps } from '../../../domain/model/User';
+import { User, Role, UserProps } from '../../../domain/model/';
 
 class CreateUserCommand {
   user: User;

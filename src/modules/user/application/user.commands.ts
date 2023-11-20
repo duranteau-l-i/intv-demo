@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 
-import User, { UserProps } from '../domain/model/User';
+import { User, UserProps } from '../domain/model';
 import IUserRepository from '../domain/user.repository';
 import CreateUserCommandHandler from './useCases/createUser/CreateUser.command-handler';
 import CreateUserCommand from './useCases/createUser/CreateUser.command';

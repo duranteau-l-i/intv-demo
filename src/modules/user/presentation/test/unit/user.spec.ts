@@ -4,7 +4,7 @@ import UserQueries from '../../../application/user.queries';
 import UserCommands from '../../../application/user.commands';
 import UserInMemoryRepository from '../../../infrastructure/UserInMemoryRepository';
 
-import User, { Role, UserProps } from '../../../domain/model/User';
+import { User, Role, UserProps } from '../../../domain/model';
 import { OrderBy } from '../../../../../common/types/pagination';
 import UserError from '../../../domain/error';
 import { ErrorType } from '../../../../../common/errors/CustomError';

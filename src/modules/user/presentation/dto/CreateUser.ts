@@ -5,7 +5,7 @@ import {
   IsString,
   MinLength,
 } from 'class-validator';
-import { Role } from '../../domain/model/User';
+import { Role } from '../../domain/model';
 
 class CreateUserDTO {
   @IsOptional()

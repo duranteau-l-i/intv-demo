@@ -1,4 +1,4 @@
-import User, { Role } from '../../domain/model/User';
+import { User, Role } from '../../domain/model';
 
 export type UserViewModel = {
   id: string;

@@ -4,7 +4,7 @@ import {
   pagination,
 } from '../../../common/types';
 
-import User from '../domain/model/User';
+import { User } from '../domain/model';
 import IUserRepository, {
   USER_ORDER_DEFAULT_VALUE,
   USER_ORDER_VALUES,

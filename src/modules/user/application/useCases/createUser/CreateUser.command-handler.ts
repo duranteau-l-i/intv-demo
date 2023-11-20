@@ -3,7 +3,7 @@ import CustomError, {
 } from '../../../../../common/errors/CustomError';
 import { ICommandHandler } from '../../../../../common/domain/CommandHandler';
 
-import User from '../../../domain/model/User';
+import { User } from '../../../domain/model';
 import UserError from '../../../domain/error';
 import IUserRepository from '../../../domain/user.repository';
 import CreateUserCommand from './CreateUser.command';

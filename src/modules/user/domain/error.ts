@@ -11,6 +11,7 @@ const UserError = {
     notValidPassword:
       'The password must be at least 6 characters long and contain at least one capital letter and one special character',
     userAlreadyExists: 'The user already exists',
+    signIn: 'The username or password is wrong',
   },
 };
 

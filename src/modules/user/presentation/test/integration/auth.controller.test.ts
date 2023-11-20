@@ -7,7 +7,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import UserRepository from '../../../infrastructure/UserRepository';
 import UserEntity from '../../../infrastructure/entities/User.entity';
 import { DataSource } from 'typeorm';
-import { Role } from '../../../domain/model/User';
+import { Role } from '../../../domain/model';
 import AuthController from '../../auth.controller';
 import AuthCommands from '../../../application/auth.commands';
 import {

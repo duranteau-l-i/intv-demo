@@ -1,8 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
 import UserInMemoryRepository from '../../../infrastructure/UserInMemoryRepository';
-import { Role, UserProps } from '../../../domain/model/User';
+import { User, Role, UserProps } from '../../../domain/model';
 import AuthCommands from '../../../application/auth.commands';
+import Password from '../../../domain/model/Password';
+import UserError from '../../../domain/error';
+import { ErrorType } from '../../../../../common/errors/CustomError';
 
 describe('Auth', () => {
   let userRepository: UserInMemoryRepository;
@@ -29,7 +32,7 @@ describe('Auth', () => {
   });
 
   describe('signUp', () => {
-    it('should return a token', async () => {
+    it('should return the tokens', async () => {
       userRepository.seedUsers([]);
 
       const user1 = {
@@ -59,6 +62,53 @@ describe('Auth', () => {
         username: 'user1',
         role: Role.user,
       });
+    });
+  });
+
+  describe('signIn', () => {
+    it('should return the tokens', async () => {
+      const pass = 'Abcd1!';
+      const password = new Password(pass);
+      const passwordHashed = await password.hash();
+
+      const user1 = new User({
+        id: 'user1',
+        firstName: 'john',
+        lastName: 'doe',
+        email: 'user1@test.com',
+        username: 'user1',
+        password: passwordHashed,
+        role: Role.admin,
+      });
+
+      userRepository.seedUsers([user1]);
+
+      const tokens = await authCommands.signIn(user1.username, pass);
+
+      expect(tokens.accessToken).not.toBeNull();
+      expect(tokens.refreshToken).not.toBeNull();
+    });
+
+    it('should return an error if the password is incorrect', async () => {
+      const pass = 'Abcd1!';
+      const password = new Password(pass);
+      const passwordHashed = await password.hash();
+
+      const user1 = new User({
+        id: 'user1',
+        firstName: 'john',
+        lastName: 'doe',
+        email: 'user1@test.com',
+        username: 'user1',
+        password: passwordHashed,
+        role: Role.admin,
+      });
+
+      userRepository.seedUsers([user1]);
+
+      await expect(
+        authCommands.signIn(user1.username, pass + 'wrong'),
+      ).rejects.toThrowError(UserError[ErrorType.badRequest].signIn);
     });
   });
 });

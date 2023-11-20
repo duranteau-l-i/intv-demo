@@ -16,7 +16,7 @@ import UserQueries from '../application/user.queries';
 import { UserViewModel, userToViewModel } from './mapper/user.mapper';
 import UserCommands from '../application/user.commands';
 import CreateUserDTO from './dto/CreateUser';
-import { UserProps } from '../domain/model/User';
+import { UserProps } from '../domain/model';
 import UpdateUserDTO from './dto/UpdateUser';
 
 @Controller('/users')

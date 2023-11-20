@@ -10,7 +10,7 @@ import UserRepository from '../../../infrastructure/UserRepository';
 import UserController from '../../user.controller';
 import UserEntity from '../../../infrastructure/entities/User.entity';
 import { DataSource } from 'typeorm';
-import { Role } from '../../../domain/model/User';
+import { Role } from '../../../domain/model';
 import UserError from '../../../domain/error';
 import { ErrorType } from '../../../../../common/errors/CustomError';
 

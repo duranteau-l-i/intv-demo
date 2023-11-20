@@ -4,7 +4,7 @@ import HttpExceptions from '../../../common/errors/HttpExceptions';
 
 import AuthCommands from '../application/auth.commands';
 import CreateUserDTO from './dto/CreateUser';
-import { UserProps } from '../domain/model/User';
+import { UserProps } from '../domain/model';
 
 @Controller('/auth')
 class AuthController {

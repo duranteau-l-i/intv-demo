@@ -37,8 +37,8 @@ class Password extends ValueObject<Password> {
     return await argon2.hash(this._value);
   }
 
-  verifyHash(data: string) {
-    argon2.verify(this._value, data);
+  async verifyHash(data: string) {
+    return await argon2.verify(this._value, data);
   }
 }
 
