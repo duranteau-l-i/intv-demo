@@ -8,6 +8,7 @@ import AuthCommands from './application/auth.commands';
 import UserEntity from './infrastructure/entities/User.entity';
 import UserRepository from './infrastructure/UserRepository';
 import UserController from './presentation/user.controller';
+import AuthController from './presentation/auth.controller';
 import { AccessTokenStrategy, RefreshTokenStrategy } from '../../common/guards';
 
 @Module({
@@ -23,6 +24,6 @@ import { AccessTokenStrategy, RefreshTokenStrategy } from '../../common/guards';
     AccessTokenStrategy,
     RefreshTokenStrategy,
   ],
-  controllers: [UserController],
+  controllers: [UserController, AuthController],
 })
 export class UserModule {}

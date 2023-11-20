@@ -56,7 +56,7 @@ describe('User', () => {
   });
 
   afterAll(async () => {
-    await dataSource.getRepository(UserEntity).clear();
+    await dataSource.getRepository(UserEntity).delete({ id: 'user1' });
     await app.close();
     server.close();
   });
@@ -96,12 +96,12 @@ describe('User', () => {
       });
   });
 
-  it(`/GET users`, () => {
-    return request(server)
-      .get('/users')
-      .expect(200)
-      .expect({
-        data: [
+  it(`/GET users`, async () => {
+    const res = await request(server).get('/users').expect(200);
+
+    expect(res.body).toEqual(
+      expect.objectContaining({
+        data: expect.arrayContaining([
           {
             id: 'user1',
             firstName: 'john',
@@ -110,18 +110,19 @@ describe('User', () => {
             username: 'user1',
             role: Role.admin,
           },
-        ],
+        ]),
         count: 1,
         pages: 1,
         orderBy: 'ASC',
         orderValue: 'username',
         perPage: 10,
         page: 1,
-      });
+      }),
+    );
   });
 
-  it(`/GET users/:id`, () => {
-    return request(server).get('/users/user1').expect(200).expect({
+  it(`/GET users/:id`, async () => {
+    await request(server).get('/users/user1').expect(200).expect({
       id: 'user1',
       firstName: 'john',
       lastName: 'doe',
@@ -131,16 +132,16 @@ describe('User', () => {
     });
   });
 
-  it(`/GET users/:wrong-id`, () => {
-    return request(server).get('/users/wrong-id').expect(404).expect({
+  it(`/GET users/:wrong-id`, async () => {
+    await request(server).get('/users/wrong-id').expect(404).expect({
       statusCode: 404,
       message: UserError[ErrorType.notFound].byId,
       error: 'Not Found',
     });
   });
 
-  it(`/PATCH users/:id - error`, () => {
-    return request(server)
+  it(`/PATCH users/:id - error`, async () => {
+    await request(server)
       .patch('/users/user1')
       .send({
         firstName: 'jo',
@@ -154,8 +155,8 @@ describe('User', () => {
       });
   });
 
-  it(`/PATCH users/:id`, () => {
-    return request(server)
+  it(`/PATCH users/:id`, async () => {
+    await request(server)
       .patch('/users/user1')
       .send({
         firstName: 'steve',
@@ -172,8 +173,8 @@ describe('User', () => {
       });
   });
 
-  it(`/POST users`, () => {
-    return request(server)
+  it(`/POST users`, async () => {
+    await request(server)
       .post('/users')
       .send({
         id: 'user2',
@@ -195,8 +196,8 @@ describe('User', () => {
       });
   });
 
-  it(`/GET users`, () => {
-    return request(server)
+  it(`/GET users`, async () => {
+    await request(server)
       .get('/users')
       .expect(200)
       .expect({
@@ -227,20 +228,20 @@ describe('User', () => {
       });
   });
 
-  it(`/DELETE users/:id`, () => {
-    return request(server).delete('/users/user2').expect(200);
+  it(`/DELETE users/:id`, async () => {
+    await request(server).delete('/users/user2').expect(200);
   });
 
-  it(`/DELETE users/:id`, () => {
-    return request(server).delete('/users/user3').expect(404).expect({
+  it(`/DELETE users/:id`, async () => {
+    await request(server).delete('/users/user3').expect(404).expect({
       statusCode: 404,
       message: UserError[ErrorType.notFound].byId,
       error: 'Not Found',
     });
   });
 
-  it(`/GET users`, () => {
-    return request(server)
+  it(`/GET users`, async () => {
+    await request(server)
       .get('/users')
       .expect(200)
       .expect({

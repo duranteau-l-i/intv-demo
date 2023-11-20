@@ -13,8 +13,6 @@ describe('Auth', () => {
 
     const app: TestingModule = await Test.createTestingModule({
       providers: [
-        // UserQueries,
-        // UserCommands,
         AuthCommands,
         {
           provide: 'UserRepository',
