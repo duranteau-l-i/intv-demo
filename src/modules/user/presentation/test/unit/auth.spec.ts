@@ -111,4 +111,29 @@ describe('Auth', () => {
       ).rejects.toThrowError(UserError[ErrorType.badRequest].signIn);
     });
   });
+
+  describe('logOut', () => {
+    it('should return the tokens', async () => {
+      const pass = 'Abcd1!';
+      const password = new Password(pass);
+      const passwordHashed = await password.hash();
+
+      const user1 = new User({
+        id: 'user1',
+        firstName: 'john',
+        lastName: 'doe',
+        email: 'user1@test.com',
+        username: 'user1',
+        password: passwordHashed,
+        role: Role.admin,
+      });
+
+      userRepository.seedUsers([user1]);
+
+      await authCommands.logOut(user1.id);
+
+      const user = userRepository.users[0];
+      expect(user.refreshToken).toBeNull();
+    });
+  });
 });

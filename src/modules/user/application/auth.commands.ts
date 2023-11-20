@@ -6,6 +6,8 @@ import SignUpCommandHandler from './useCases/signUp/SignUp.command-handler';
 import SignUpCommand from './useCases/signUp/SignUp.command';
 import SignInCommandHandler from './useCases/signIn/SignIn.command-handler';
 import SignInCommand from './useCases/signIn/SignIn.command';
+import LogOutCommandHandler from './useCases/logOut/LogOut.command-handler';
+import LogOutCommand from './useCases/logOut/LogOut.command';
 
 @Injectable()
 class AuthCommands {
@@ -28,6 +30,12 @@ class AuthCommands {
   ): Promise<{ accessToken: string; refreshToken: string }> {
     return await new SignInCommandHandler(this.userRepository).handle(
       new SignInCommand(username, password),
+    );
+  }
+
+  async logOut(id: string): Promise<void> {
+    return await new LogOutCommandHandler(this.userRepository).handle(
+      new LogOutCommand(id),
     );
   }
 }
