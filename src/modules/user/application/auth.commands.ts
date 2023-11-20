@@ -12,7 +12,9 @@ class AuthCommands {
     private userRepository: IUserRepository,
   ) {}
 
-  async signUp(user: UserProps): Promise<string> {
+  async signUp(
+    user: UserProps,
+  ): Promise<{ accessToken: string; refreshToken: string }> {
     return await new SignUpCommandHandler(this.userRepository).handle(
       new SignUpCommand(user),
     );

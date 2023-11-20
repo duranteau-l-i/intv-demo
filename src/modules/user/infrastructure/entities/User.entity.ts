@@ -29,6 +29,9 @@ class UserEntity {
   @Column()
   role: string;
 
+  @Column({ nullable: true })
+  refreshToken: string;
+
   @CreateDateColumn()
   created: Date;
 

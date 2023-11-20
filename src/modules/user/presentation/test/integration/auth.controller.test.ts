@@ -66,7 +66,7 @@ describe('User', () => {
   });
 
   it(`/POST auth`, async () => {
-    await request(server)
+    const res = await request(server)
       .post('/auth/signup')
       .send({
         firstName: 'john',
@@ -77,5 +77,8 @@ describe('User', () => {
         role: Role.admin,
       })
       .expect(201);
+
+    expect(res.body.accessToken).not.toBeNull();
+    expect(res.body.refreshToken).not.toBeNull();
   });
 });

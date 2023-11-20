@@ -93,6 +93,7 @@ class UserRepository implements IUserRepository {
         username: user.username,
         password: user.password,
         role: user.role,
+        refreshToken: user.refreshToken,
       })
       .orIgnore(`("id") DO NOTHING`)
       .execute();

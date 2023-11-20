@@ -21,7 +21,11 @@ class Token extends ValueObject<Token> {
     return this._refreshToken;
   }
 
-  async getHashedRefreshToken(): Promise<string> {
+  get hashedRefreshToken(): string {
+    return this._hashedRefreshToken;
+  }
+
+  async setHashedRefreshToken(): Promise<string> {
     await this.getTokens();
     await this.updateRefreshToken();
 

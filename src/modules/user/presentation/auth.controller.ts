@@ -11,11 +11,13 @@ class AuthController {
   constructor(private readonly authCommands: AuthCommands) {}
 
   @Post('/signup')
-  async signUp(@Body() createUserDTO: CreateUserDTO): Promise<string> {
+  async signUp(
+    @Body() createUserDTO: CreateUserDTO,
+  ): Promise<{ accessToken: string; refreshToken: string }> {
     try {
-      const token = await this.authCommands.signUp(createUserDTO as UserProps);
+      const tokens = await this.authCommands.signUp(createUserDTO as UserProps);
 
-      return token;
+      return tokens;
     } catch (error) {
       throw new HttpExceptions(error).exception();
     }

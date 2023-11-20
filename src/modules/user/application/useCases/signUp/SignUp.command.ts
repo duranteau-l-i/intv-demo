@@ -3,8 +3,10 @@ import Password from '../../../domain/model/Password';
 import User, { Role, UserProps } from '../../../domain/model/User';
 
 class SignUpCommand {
-  user: User;
   userProps: UserProps;
+  user: User;
+  accessToken: string;
+  refreshToken: string;
 
   constructor(userProps: UserProps) {
     this.userProps = userProps;
@@ -26,7 +28,10 @@ class SignUpCommand {
       password: passwordHashed,
     });
 
-    const refreshToken = await this.setRefreshToken(user);
+    const { accessToken, refreshToken } = await this.setRefreshToken(user);
+    this.accessToken = accessToken;
+    this.refreshToken = refreshToken;
+
     user.refreshToken = refreshToken;
 
     this.user = user;
@@ -46,7 +51,12 @@ class SignUpCommand {
       role: user.role,
     });
 
-    return await token.getHashedRefreshToken();
+    await token.setHashedRefreshToken();
+
+    return {
+      accessToken: token.accessToken,
+      refreshToken: token.hashedRefreshToken,
+    };
   }
 }
 

@@ -40,9 +40,10 @@ describe('Auth', () => {
         password: 'Abcd1!',
       };
 
-      const token = await authCommands.signUp(user1 as UserProps);
+      const tokens = await authCommands.signUp(user1 as UserProps);
 
-      expect(token).not.toBeNull;
+      expect(tokens.accessToken).not.toBeNull();
+      expect(tokens.refreshToken).not.toBeNull();
 
       const user = userRepository.users[0];
       expect({

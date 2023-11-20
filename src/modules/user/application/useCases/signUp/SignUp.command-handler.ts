@@ -10,7 +10,9 @@ import CreateUserCommand from './SignUp.command';
 class CreateUserCommandHandler implements ICommandHandler {
   constructor(private userRepository: IUserRepository) {}
 
-  async handle(command: CreateUserCommand): Promise<string> {
+  async handle(
+    command: CreateUserCommand,
+  ): Promise<{ accessToken: string; refreshToken: string }> {
     await command.createUserEntity();
 
     const userExists = await this.userRepository.getUserByUsername(
@@ -23,9 +25,12 @@ class CreateUserCommandHandler implements ICommandHandler {
       });
     }
 
-    const user = await this.userRepository.createUser(command.user);
+    await this.userRepository.createUser(command.user);
 
-    return user.refreshToken;
+    return {
+      accessToken: command.accessToken,
+      refreshToken: command.refreshToken,
+    };
   }
 }
 
