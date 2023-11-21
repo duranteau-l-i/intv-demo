@@ -46,9 +46,7 @@ class AuthController {
   @Get('/logout')
   async logOut(@Req() req: Request): Promise<void> {
     try {
-      const userId = req.user['sub'];
-
-      return await this.authCommands.logOut(userId);
+      return await this.authCommands.logOut(req.user);
     } catch (error) {
       throw new HttpExceptions(error).exception();
     }
@@ -61,7 +59,7 @@ class AuthController {
       const userId = req.user['sub'];
       const refreshToken = req.user['refreshToken'];
 
-      return await this.authCommands.refreshTokens(userId, refreshToken);
+      return await this.authCommands.refreshTokens(req.user, refreshToken);
     } catch (error) {
       throw new HttpExceptions(error).exception();
     }

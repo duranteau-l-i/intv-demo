@@ -7,6 +7,7 @@ import {
   Patch,
   Post,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 
 import HttpExceptions from '@common/errors/HttpExceptions';
@@ -18,7 +19,9 @@ import UserCommands from '../application/user.commands';
 import CreateUserDTO from './dto/CreateUser';
 import { UserProps } from '../domain/model';
 import UpdateUserDTO from './dto/UpdateUser';
+import { AccessTokenGuard } from '@common/guards';
 
+@UseGuards(AccessTokenGuard)
 @Controller('/users')
 class UserController {
   constructor(

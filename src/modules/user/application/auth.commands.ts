@@ -1,6 +1,8 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 
+import CustomError, { ErrorType } from '@common/errors/CustomError';
+
 import { User, UserProps } from '../domain/model';
 import IUserRepository from '../domain/user.repository';
 import SignUpCommandHandler from './useCases/auth/signUp/SignUp.command-handler';
@@ -11,6 +13,7 @@ import LogOutCommandHandler from './useCases/auth/logOut/LogOut.command-handler'
 import LogOutCommand from './useCases/auth/logOut/LogOut.command';
 import RefreshTokensCommandHandler from './useCases/auth/refreshTokens/RefreshTokens.command-handler';
 import RefreshTokensCommand from './useCases/auth/refreshTokens/RefreshTokens.command';
+import UserError from '../domain/error';
 
 export type Tokens = { accessToken: string; refreshToken: string };
 
@@ -39,21 +42,34 @@ class AuthCommands {
     );
   }
 
-  async logOut(id: string): Promise<void> {
+  async logOut(user: Express.User): Promise<void> {
+    const userId = user['sub'];
+    this.checkIfNotExpires(user['exp']);
+
     return await new LogOutCommandHandler(this.userRepository).handle(
-      new LogOutCommand(id),
+      new LogOutCommand(userId),
     );
   }
 
-  async refreshTokens(id: string, refreshToken: string): Promise<Tokens> {
+  async refreshTokens(
+    user: Express.User,
+    refreshToken: string,
+  ): Promise<Tokens> {
+    const userId = user['sub'];
+    this.checkIfNotExpires(user['exp']);
+
     return await new RefreshTokensCommandHandler(this.userRepository).handle(
-      new RefreshTokensCommand(id, refreshToken),
+      new RefreshTokensCommand(userId, refreshToken),
       this.generateTokens(this.jwtService),
     );
   }
 
   generateTokens(jwtService: JwtService) {
-    const r = async (data: { sub: string; username: string; role: string }) => {
+    const generate = async (data: {
+      sub: string;
+      username: string;
+      role: string;
+    }) => {
       const accessToken = await jwtService.signAsync(data, {
         secret: process.env.JWT_ACCESS_SECRET,
         expiresIn: '15m',
@@ -66,7 +82,18 @@ class AuthCommands {
       return { accessToken, refreshToken };
     };
 
-    return r;
+    return generate;
+  }
+
+  private checkIfNotExpires(date: number): void {
+    const now = Math.floor(new Date().getTime() / 1000);
+
+    if (date < now) {
+      throw new CustomError({
+        type: ErrorType.forbidden,
+        message: UserError[ErrorType.forbidden].accessDenied,
+      });
+    }
   }
 }
 

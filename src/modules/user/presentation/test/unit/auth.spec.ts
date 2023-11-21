@@ -12,6 +12,7 @@ import AuthCommands from '../../../application/auth.commands';
 import Password from '../../../domain/model/Password';
 import UserError from '../../../domain/error';
 import { userToViewModel } from '../../mapper/user.mapper';
+import { makeExpiredDate, makeUserJWTToken } from '../utils/userToken';
 
 describe('Auth', () => {
   let userRepository: UserInMemoryRepository;
@@ -139,7 +140,10 @@ describe('Auth', () => {
 
       userRepository.seedUsers([user1]);
 
-      await authCommands.logOut(user1.id);
+      const exp = makeExpiredDate(15);
+      const userJWT = makeUserJWTToken(user1, exp);
+
+      await authCommands.logOut(userJWT);
 
       const user = userRepository.users[0];
       expect(user.refreshToken).toBeNull();
@@ -179,8 +183,11 @@ describe('Auth', () => {
 
       userRepository.seedUsers([user1]);
 
+      const exp = makeExpiredDate(15);
+      const userJWT = makeUserJWTToken(user1, exp);
+
       const tokens = await authCommands.refreshTokens(
-        user1.id,
+        userJWT,
         hashedRefreshToken,
       );
 
