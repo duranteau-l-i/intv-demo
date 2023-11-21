@@ -54,6 +54,17 @@ class UserController {
     }
   }
 
+  @Get('/me')
+  async getMe(@Req() req: Request): Promise<UserViewModel> {
+    try {
+      const user = await this.userQueries.getUserById(req.user['sub']);
+
+      return userToViewModel(user);
+    } catch (error) {
+      throw new HttpExceptions(error).exception();
+    }
+  }
+
   @Get('/:id')
   async getUserById(@Param() params: { id: string }): Promise<UserViewModel> {
     try {

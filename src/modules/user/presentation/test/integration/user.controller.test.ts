@@ -124,6 +124,21 @@ describe('User', () => {
     expect(res.body.tokens.refreshToken).not.toBeNull();
   });
 
+  it(`/GET me`, async () => {
+    await request(server)
+      .get('/users/me')
+      .set('Authorization', `Bearer ${accessToken}`)
+      .expect(200)
+      .expect({
+        id: 'user1',
+        firstName: 'john',
+        lastName: 'doe',
+        email: 'user1@test.com',
+        username: 'user1',
+        role: Role.admin,
+      });
+  });
+
   it(`/DELETE users/:id`, async () => {
     await request(server)
       .delete('/users/user')
