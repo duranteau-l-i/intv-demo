@@ -3,6 +3,7 @@ import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { JwtModule } from '@nestjs/jwt';
 
 import UserRepository from '../../../infrastructure/UserRepository';
 import UserEntity from '../../../infrastructure/entities/User.entity';
@@ -14,11 +15,15 @@ import {
   AccessTokenStrategy,
   RefreshTokenStrategy,
 } from '../../../../../common/guards';
+import UserError from '../../../domain/error';
+import { ErrorType } from '../../../../../common/errors/CustomError';
 
 describe('Auth', () => {
   let app: INestApplication;
   let dataSource: DataSource;
   let server: INestApplication;
+
+  let accessToken: string;
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
@@ -37,6 +42,7 @@ describe('Auth', () => {
           synchronize: true,
         }),
         TypeOrmModule.forFeature([UserEntity]),
+        JwtModule.register({}),
       ],
       controllers: [AuthController],
       providers: [
@@ -78,6 +84,8 @@ describe('Auth', () => {
       })
       .expect(201);
 
+    accessToken = res.body.accessToken;
+
     expect(res.body.accessToken).not.toBeNull();
     expect(res.body.refreshToken).not.toBeNull();
   });
@@ -87,11 +95,36 @@ describe('Auth', () => {
       .post('/auth/signin')
       .send({
         username: 'userAuth1',
+        password: 'wrong-password',
+      })
+      .expect(400);
+
+    expect(res.body).toEqual({
+      error: 'Bad Request',
+      message: UserError[ErrorType.badRequest].signIn,
+      statusCode: 400,
+    });
+  });
+
+  it(`/POST signIn`, async () => {
+    const res = await request(server)
+      .post('/auth/signin')
+      .send({
+        username: 'userAuth1',
         password: 'Abcd1!',
       })
       .expect(201);
 
+    accessToken = res.body.accessToken;
+
     expect(res.body.accessToken).not.toBeNull();
     expect(res.body.refreshToken).not.toBeNull();
+  });
+
+  it(`/GET logout`, async () => {
+    await request(server)
+      .get('/auth/logout')
+      .set('Authorization', `Bearer ${accessToken}`)
+      .expect(200);
   });
 });

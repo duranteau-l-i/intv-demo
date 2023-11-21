@@ -5,7 +5,7 @@ import { ICommandHandler } from '../../../../../common/domain/CommandHandler';
 import IUserRepository from '../../../domain/user.repository';
 import SignInCommand from './SignIn.command';
 import UserError from '../../../domain/error';
-import Token from '../../../domain/model/Token';
+import Hash from '../../../../../utils/Hash';
 import Password from '../../../domain/model/Password';
 
 class SignInCommandHandler implements ICommandHandler {
@@ -13,7 +13,15 @@ class SignInCommandHandler implements ICommandHandler {
 
   async handle(
     command: SignInCommand,
-  ): Promise<{ accessToken: string; refreshToken: string }> {
+    generateTokens: (data: {
+      sub: string;
+      username: string;
+      role: string;
+    }) => Promise<{ accessToken: string; refreshToken: string }>,
+  ): Promise<{
+    accessToken: string;
+    refreshToken: string;
+  }> {
     try {
       const user = await this.userRepository.getUserByUsername(
         command.username,
@@ -26,20 +34,21 @@ class SignInCommandHandler implements ICommandHandler {
         throw new Error();
       }
 
-      const token = new Token({
-        userId: user.id,
+      const { accessToken, refreshToken } = await generateTokens({
+        sub: user.id,
         username: user.username,
         role: user.role,
       });
 
-      await token.setHashedRefreshToken();
+      const hash = new Hash();
+      await hash.hash(refreshToken);
 
-      user.refreshToken = token.hashedRefreshToken;
+      user.refreshToken = hash.hashedRefreshToken;
       await this.userRepository.updateUser(user);
 
       return {
-        accessToken: token.accessToken,
-        refreshToken: token.hashedRefreshToken,
+        accessToken,
+        refreshToken,
       };
     } catch (error) {
       throw new CustomError({

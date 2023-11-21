@@ -1,4 +1,5 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
+import { Request } from 'express';
 
 import HttpExceptions from '../../../common/errors/HttpExceptions';
 
@@ -6,19 +7,22 @@ import AuthCommands from '../application/auth.commands';
 import CreateUserDTO from './dto/CreateUser';
 import { UserProps } from '../domain/model';
 import SignInDTO from './dto/SignIn';
+import { AccessTokenGuard } from '../../../common/guards';
+import { UserViewModel, userToViewModel } from './mapper/user.mapper';
 
 @Controller('/auth')
 class AuthController {
   constructor(private readonly authCommands: AuthCommands) {}
 
   @Post('/signup')
-  async signUp(
-    @Body() createUserDTO: CreateUserDTO,
-  ): Promise<{ accessToken: string; refreshToken: string }> {
+  async signUp(@Body() createUserDTO: CreateUserDTO): Promise<{
+    tokens: { accessToken: string; refreshToken: string };
+    user: UserViewModel;
+  }> {
     try {
-      const tokens = await this.authCommands.signUp(createUserDTO as UserProps);
+      const result = await this.authCommands.signUp(createUserDTO as UserProps);
 
-      return tokens;
+      return { ...result, user: userToViewModel(result.user) };
     } catch (error) {
       throw new HttpExceptions(error).exception();
     }
@@ -35,6 +39,16 @@ class AuthController {
       );
 
       return tokens;
+    } catch (error) {
+      throw new HttpExceptions(error).exception();
+    }
+  }
+
+  @UseGuards(AccessTokenGuard)
+  @Get('/logout')
+  async logOut(@Req() req: Request): Promise<void> {
+    try {
+      return await this.authCommands.logOut(req.user['sub']);
     } catch (error) {
       throw new HttpExceptions(error).exception();
     }

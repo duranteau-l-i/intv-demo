@@ -1,4 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { ConfigModule } from '@nestjs/config';
+import { JwtModule } from '@nestjs/jwt';
 
 import UserInMemoryRepository from '../../../infrastructure/UserInMemoryRepository';
 import { User, Role, UserProps } from '../../../domain/model';
@@ -6,6 +8,11 @@ import AuthCommands from '../../../application/auth.commands';
 import Password from '../../../domain/model/Password';
 import UserError from '../../../domain/error';
 import { ErrorType } from '../../../../../common/errors/CustomError';
+import {
+  AccessTokenStrategy,
+  RefreshTokenStrategy,
+} from '../../../../../common/guards';
+import { userToViewModel } from '../../mapper/user.mapper';
 
 describe('Auth', () => {
   let userRepository: UserInMemoryRepository;
@@ -15,12 +22,20 @@ describe('Auth', () => {
     userRepository = new UserInMemoryRepository();
 
     const app: TestingModule = await Test.createTestingModule({
+      imports: [
+        ConfigModule.forRoot({
+          envFilePath: ['.env.dev.local'],
+        }),
+        JwtModule.register({}),
+      ],
       providers: [
         AuthCommands,
         {
           provide: 'UserRepository',
           useValue: userRepository,
         },
+        AccessTokenStrategy,
+        RefreshTokenStrategy,
       ],
     }).compile();
 
@@ -43,25 +58,20 @@ describe('Auth', () => {
         password: 'Abcd1!',
       };
 
-      const tokens = await authCommands.signUp(user1 as UserProps);
+      const result = await authCommands.signUp(user1 as UserProps);
 
-      expect(tokens.accessToken).not.toBeNull();
-      expect(tokens.refreshToken).not.toBeNull();
+      expect(result.tokens.accessToken).not.toBeNull();
+      expect(result.tokens.refreshToken).not.toBeNull();
 
-      const user = userRepository.users[0];
-      expect({
-        firstName: user.firstName,
-        lastName: user.lastName,
-        email: user.email,
-        username: user.username,
-        role: user.role,
-      }).toEqual({
-        firstName: 'john',
-        lastName: 'doe',
-        email: 'user1@test.com',
-        username: 'user1',
-        role: Role.user,
-      });
+      expect(userToViewModel(result.user)).toEqual(
+        expect.objectContaining({
+          firstName: 'john',
+          lastName: 'doe',
+          email: 'user1@test.com',
+          username: 'user1',
+          role: Role.user,
+        }),
+      );
     });
   });
 

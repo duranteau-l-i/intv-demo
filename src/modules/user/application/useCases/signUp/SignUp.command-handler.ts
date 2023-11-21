@@ -5,33 +5,56 @@ import CustomError, {
 
 import IUserRepository from '../../../domain/user.repository';
 import UserError from '../../../domain/error';
-import CreateUserCommand from './SignUp.command';
+import SignUpCommand from './SignUp.command';
+import Hash from '../../../../../utils/Hash';
+import { User } from '../../../domain/model';
 
-class CreateUserCommandHandler implements ICommandHandler {
+class SignUpCommandHandler implements ICommandHandler {
   constructor(private userRepository: IUserRepository) {}
 
   async handle(
-    command: CreateUserCommand,
-  ): Promise<{ accessToken: string; refreshToken: string }> {
+    command: SignUpCommand,
+    generateTokens: (data: {
+      sub: string;
+      username: string;
+      role: string;
+    }) => Promise<{ accessToken: string; refreshToken: string }>,
+  ): Promise<{
+    tokens: { accessToken: string; refreshToken: string };
+    user: User;
+  }> {
     await command.createUserEntity();
 
-    const userExists = await this.userRepository.getUserByUsername(
+    const user = await this.userRepository.getUserByUsername(
       command.user.username,
     );
-    if (userExists) {
+    if (user) {
       throw new CustomError({
         type: ErrorType.badRequest,
         message: UserError[ErrorType.badRequest].userAlreadyExists,
       });
     }
 
-    await this.userRepository.createUser(command.user);
+    const { accessToken, refreshToken } = await generateTokens({
+      sub: command.user.id,
+      username: command.user.username,
+      role: command.user.role,
+    });
+
+    const hash = new Hash();
+    await hash.hash(refreshToken);
+
+    command.user.refreshToken = hash.hashedRefreshToken;
+    const userCreated = await this.userRepository.createUser(command.user);
 
     return {
-      accessToken: command.accessToken,
-      refreshToken: command.refreshToken,
+      tokens: {
+        accessToken,
+        refreshToken,
+      },
+      user: userCreated,
     };
   }
 }
 
-export default CreateUserCommandHandler;
+export default SignUpCommandHandler;

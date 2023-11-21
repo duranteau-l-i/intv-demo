@@ -1,4 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { ConfigModule } from '@nestjs/config';
 
 import UserQueries from '../../../application/user.queries';
 import UserCommands from '../../../application/user.commands';
@@ -19,6 +20,11 @@ describe('User', () => {
     userRepository = new UserInMemoryRepository();
 
     const app: TestingModule = await Test.createTestingModule({
+      imports: [
+        ConfigModule.forRoot({
+          envFilePath: ['.env.dev.local'],
+        }),
+      ],
       providers: [
         UserQueries,
         UserCommands,

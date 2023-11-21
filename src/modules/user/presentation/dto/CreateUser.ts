@@ -1,10 +1,4 @@
-import {
-  IsArray,
-  IsEmail,
-  IsOptional,
-  IsString,
-  MinLength,
-} from 'class-validator';
+import { IsEmail, IsOptional, IsString, MinLength } from 'class-validator';
 import { Role } from '../../domain/model';
 
 class CreateUserDTO {
@@ -23,7 +17,7 @@ class CreateUserDTO {
   @IsEmail()
   email: string;
 
-  @IsArray()
+  @IsString()
   @MinLength(3)
   username: string;
 

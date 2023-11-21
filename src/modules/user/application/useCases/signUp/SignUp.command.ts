@@ -1,12 +1,9 @@
-import Token from '../../../domain/model/Token';
 import Password from '../../../domain/model/Password';
 import { User, Role, UserProps } from '../../../domain/model';
 
 class SignUpCommand {
   userProps: UserProps;
   user: User;
-  accessToken: string;
-  refreshToken: string;
 
   constructor(userProps: UserProps) {
     this.userProps = userProps;
@@ -28,12 +25,6 @@ class SignUpCommand {
       password: passwordHashed,
     });
 
-    const { accessToken, refreshToken } = await this.setRefreshToken(user);
-    this.accessToken = accessToken;
-    this.refreshToken = refreshToken;
-
-    user.refreshToken = refreshToken;
-
     this.user = user;
   }
 
@@ -42,21 +33,6 @@ class SignUpCommand {
     password.isValid();
     const passwordHashed = await password.hash();
     return passwordHashed;
-  }
-
-  private async setRefreshToken(user: User) {
-    const token = new Token({
-      userId: user.id,
-      username: user.username,
-      role: user.role,
-    });
-
-    await token.setHashedRefreshToken();
-
-    return {
-      accessToken: token.accessToken,
-      refreshToken: token.hashedRefreshToken,
-    };
   }
 }
 
