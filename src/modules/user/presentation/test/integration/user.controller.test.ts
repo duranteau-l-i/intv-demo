@@ -4,6 +4,8 @@ import * as request from 'supertest';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
+import { ErrorType } from '@common/errors/CustomError';
+
 import UserCommands from '../../../application/user.commands';
 import UserQueries from '../../../application/user.queries';
 import UserRepository from '../../../infrastructure/UserRepository';
@@ -12,7 +14,6 @@ import UserEntity from '../../../infrastructure/entities/User.entity';
 import { DataSource } from 'typeorm';
 import { Role } from '../../../domain/model';
 import UserError from '../../../domain/error';
-import { ErrorType } from '../../../../../common/errors/CustomError';
 
 describe('User', () => {
   let app: INestApplication;

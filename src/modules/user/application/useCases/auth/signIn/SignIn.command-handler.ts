@@ -1,14 +1,12 @@
-import CustomError, {
-  ErrorType,
-} from '../../../../../../common/errors/CustomError';
-import { ICommandHandler } from '../../../../../../common/domain/CommandHandler';
+import CustomError, { ErrorType } from '@common/errors/CustomError';
+import { ICommandHandler } from '@common/domain/CommandHandler';
+import Hash from '@utils/Hash';
+
 import IUserRepository from '../../../../domain/user.repository';
-import SignInCommand from './SignIn.command';
+import { User, Password } from '../../../../domain/model';
 import UserError from '../../../../domain/error';
-import Hash from '../../../../../../utils/Hash';
-import Password from '../../../../domain/model/Password';
+import SignInCommand from './SignIn.command';
 import { Tokens } from '../../../auth.commands';
-import { User } from 'src/modules/user/domain/model';
 
 class SignInCommandHandler implements ICommandHandler {
   constructor(private userRepository: IUserRepository) {}

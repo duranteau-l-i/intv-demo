@@ -1,4 +1,4 @@
-import { ErrorType } from '../../../common/errors/CustomError';
+import { ErrorType } from '@common/errors/CustomError';
 
 const UserError = {
   [ErrorType.notFound]: {

@@ -1,5 +1,5 @@
-import CustomError, { ErrorType } from '../../../../common/errors/CustomError';
-import { ValueObject } from '../../../../common/domain/ValueObject';
+import CustomError, { ErrorType } from '@common/errors/CustomError';
+import { ValueObject } from '@common/domain/ValueObject';
 import UserError from '../error';
 
 class EmailAddress extends ValueObject<EmailAddress> {

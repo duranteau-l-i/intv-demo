@@ -9,7 +9,7 @@ import UserEntity from './infrastructure/entities/User.entity';
 import UserRepository from './infrastructure/UserRepository';
 import UserController from './presentation/user.controller';
 import AuthController from './presentation/auth.controller';
-import { AccessTokenStrategy, RefreshTokenStrategy } from '../../common/guards';
+import { AccessTokenStrategy, RefreshTokenStrategy } from '@common/guards';
 
 @Module({
   imports: [TypeOrmModule.forFeature([UserEntity]), JwtModule.register({})],

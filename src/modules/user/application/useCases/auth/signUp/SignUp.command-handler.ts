@@ -1,14 +1,12 @@
-import { ICommandHandler } from '../../../../../../common/domain/CommandHandler';
-import CustomError, {
-  ErrorType,
-} from '../../../../../../common/errors/CustomError';
+import { ICommandHandler } from '@common/domain/CommandHandler';
+import CustomError, { ErrorType } from '@common/errors/CustomError';
+import Hash from '@utils/Hash';
 
 import IUserRepository from '../../../../domain/user.repository';
 import UserError from '../../../../domain/error';
-import SignUpCommand from './SignUp.command';
-import Hash from '../../../../../../utils/Hash';
 import { User } from '../../../../domain/model';
 import { Tokens } from '../../../auth.commands';
+import SignUpCommand from './SignUp.command';
 
 class SignUpCommandHandler implements ICommandHandler {
   constructor(private userRepository: IUserRepository) {}

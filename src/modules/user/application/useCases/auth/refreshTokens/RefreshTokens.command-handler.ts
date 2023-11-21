@@ -1,10 +1,9 @@
-import Hash from '../../../../../../utils/Hash';
-import { ICommandHandler } from '../../../../../../common/domain/CommandHandler';
+import Hash from '@utils/Hash';
+import { ICommandHandler } from '@common/domain/CommandHandler';
+import CustomError, { ErrorType } from '@common/errors/CustomError';
+
 import IUserRepository from '../../../../domain/user.repository';
 import RefreshTokensCommand from './RefreshTokens.command';
-import CustomError, {
-  ErrorType,
-} from '../../../../../../common/errors/CustomError';
 import UserError from '../../../../../../modules/user/domain/error';
 import { User } from '../../../../domain/model';
 import { Tokens } from '../../../auth.commands';

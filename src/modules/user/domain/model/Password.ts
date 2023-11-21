@@ -1,7 +1,7 @@
 import * as argon2 from 'argon2';
 
-import CustomError, { ErrorType } from '../../../../common/errors/CustomError';
-import { ValueObject } from '../../../../common/domain/ValueObject';
+import CustomError, { ErrorType } from '@common/errors/CustomError';
+import { ValueObject } from '@common/domain/ValueObject';
 import UserError from '../error';
 
 class Password extends ValueObject<Password> {

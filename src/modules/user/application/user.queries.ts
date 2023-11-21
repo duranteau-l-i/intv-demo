@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 
-import { PaginationOptions, PaginationResponse } from '../../../common/types';
+import { PaginationOptions, PaginationResponse } from '@common/types';
 
 import { User } from '../domain/model';
 import IUserRepository from '../domain/user.repository';

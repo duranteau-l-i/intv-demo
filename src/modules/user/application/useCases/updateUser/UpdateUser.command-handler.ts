@@ -1,4 +1,4 @@
-import { ICommandHandler } from '../../../../../common/domain/CommandHandler';
+import { ICommandHandler } from '@common/domain/CommandHandler';
 import { User } from '../../../domain/model';
 import IUserRepository from '../../../domain/user.repository';
 import UpdateUserCommand from './UpdateUser.command';

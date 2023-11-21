@@ -2,18 +2,16 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ConfigModule } from '@nestjs/config';
 import { JwtModule, JwtService } from '@nestjs/jwt';
 
+import { ErrorType } from '@common/errors/CustomError';
+import { AccessTokenStrategy, RefreshTokenStrategy } from '@common/guards';
+import Hash from '@utils/Hash';
+
 import UserInMemoryRepository from '../../../infrastructure/UserInMemoryRepository';
 import { User, Role, UserProps } from '../../../domain/model';
 import AuthCommands from '../../../application/auth.commands';
 import Password from '../../../domain/model/Password';
 import UserError from '../../../domain/error';
-import { ErrorType } from '../../../../../common/errors/CustomError';
-import {
-  AccessTokenStrategy,
-  RefreshTokenStrategy,
-} from '../../../../../common/guards';
 import { userToViewModel } from '../../mapper/user.mapper';
-import Hash from '../../../../../utils/Hash';
 
 describe('Auth', () => {
   let userRepository: UserInMemoryRepository;

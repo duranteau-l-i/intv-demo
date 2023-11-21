@@ -1,4 +1,4 @@
-import { ICommandHandler } from '../../../../../../common/domain/CommandHandler';
+import { ICommandHandler } from '@common/domain/CommandHandler';
 import IUserRepository from '../../../../domain/user.repository';
 import LogOutCommand from './LogOut.command';
 

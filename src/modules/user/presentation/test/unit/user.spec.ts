@@ -5,10 +5,11 @@ import UserQueries from '../../../application/user.queries';
 import UserCommands from '../../../application/user.commands';
 import UserInMemoryRepository from '../../../infrastructure/UserInMemoryRepository';
 
+import { OrderBy } from '@common/types/pagination';
+import { ErrorType } from '@common/errors/CustomError';
+
 import { User, Role, UserProps } from '../../../domain/model';
-import { OrderBy } from '../../../../../common/types/pagination';
 import UserError from '../../../domain/error';
-import { ErrorType } from '../../../../../common/errors/CustomError';
 import { userToViewModel } from '../../mapper/user.mapper';
 
 describe('User', () => {

@@ -1,7 +1,5 @@
-import CustomError, {
-  ErrorType,
-} from '../../../../../common/errors/CustomError';
-import { ICommandHandler } from '../../../../../common/domain/CommandHandler';
+import CustomError, { ErrorType } from '@common/errors/CustomError';
+import { ICommandHandler } from '@common/domain/CommandHandler';
 
 import { User } from '../../../domain/model';
 import UserError from '../../../domain/error';

@@ -1,4 +1,4 @@
-import { PaginationOptions, PaginationResponse } from '../../../common/types';
+import { PaginationOptions, PaginationResponse } from '@common/types';
 
 import { User } from './model';
 

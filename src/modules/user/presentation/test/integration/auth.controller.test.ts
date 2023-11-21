@@ -5,18 +5,16 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { JwtModule } from '@nestjs/jwt';
 
+import { AccessTokenStrategy, RefreshTokenStrategy } from '@common/guards';
+import { ErrorType } from '@common/errors/CustomError';
+
 import UserRepository from '../../../infrastructure/UserRepository';
 import UserEntity from '../../../infrastructure/entities/User.entity';
 import { DataSource } from 'typeorm';
 import { Role } from '../../../domain/model';
 import AuthController from '../../auth.controller';
 import AuthCommands from '../../../application/auth.commands';
-import {
-  AccessTokenStrategy,
-  RefreshTokenStrategy,
-} from '../../../../../common/guards';
 import UserError from '../../../domain/error';
-import { ErrorType } from '../../../../../common/errors/CustomError';
 
 describe('Auth', () => {
   let app: INestApplication;

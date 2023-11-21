@@ -2,7 +2,8 @@ import {
   PaginationOptions,
   PaginationResponse,
   pagination,
-} from '../../../common/types';
+} from '@common/types';
+import CustomError, { ErrorType } from '@common/errors/CustomError';
 
 import { User } from '../domain/model';
 import IUserRepository, {
@@ -13,7 +14,6 @@ import { InjectDataSource } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
 import UserEntity from './entities/User.entity';
 import { userToDomain } from './mappers/user.mapper';
-import CustomError, { ErrorType } from '../../../common/errors/CustomError';
 import UserError from '../domain/error';
 
 class UserRepository implements IUserRepository {

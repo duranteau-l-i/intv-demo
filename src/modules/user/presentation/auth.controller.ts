@@ -1,13 +1,13 @@
 import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
 import { Request } from 'express';
 
-import HttpExceptions from '../../../common/errors/HttpExceptions';
+import HttpExceptions from '@common/errors/HttpExceptions';
+import { AccessTokenGuard, RefreshTokenGuard } from '@common/guards';
 
 import AuthCommands, { Tokens } from '../application/auth.commands';
 import CreateUserDTO from './dto/CreateUser';
 import { UserProps } from '../domain/model';
 import SignInDTO from './dto/SignIn';
-import { AccessTokenGuard, RefreshTokenGuard } from '../../../common/guards';
 import { UserViewModel, userToViewModel } from './mapper/user.mapper';
 
 @Controller('/auth')

@@ -9,8 +9,8 @@ import {
   Query,
 } from '@nestjs/common';
 
-import HttpExceptions from '../../../common/errors/HttpExceptions';
-import { PaginationOptions, PaginationResponse } from '../../../common/types';
+import HttpExceptions from '@common/errors/HttpExceptions';
+import { PaginationOptions, PaginationResponse } from '@common/types';
 
 import UserQueries from '../application/user.queries';
 import { UserViewModel, userToViewModel } from './mapper/user.mapper';
