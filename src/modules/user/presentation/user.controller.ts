@@ -65,10 +65,12 @@ class UserController {
 
   @Post()
   async createUser(
+    @Req() req: Request,
     @Body() createUserDTO: CreateUserDTO,
   ): Promise<UserViewModel> {
     try {
       const user = await this.userCommands.createUser(
+        req.user as ReqUser,
         createUserDTO as UserProps,
       );
 
@@ -80,11 +82,13 @@ class UserController {
 
   @Patch('/:id')
   async updateUser(
+    @Req() req: Request,
     @Param() params: { id: string },
     @Body() updateUserDTO: UpdateUserDTO,
   ): Promise<UserViewModel> {
     try {
       const user = await this.userCommands.updateUser(
+        req.user as ReqUser,
         params.id,
         updateUserDTO as Partial<UserProps>,
       );
@@ -96,9 +100,12 @@ class UserController {
   }
 
   @Delete('/:id')
-  async removeUser(@Param() params: { id: string }): Promise<void> {
+  async removeUser(
+    @Req() req: Request,
+    @Param() params: { id: string },
+  ): Promise<void> {
     try {
-      return await this.userCommands.removeUser(params.id);
+      return await this.userCommands.removeUser(req.user as ReqUser, params.id);
     } catch (error) {
       throw new HttpExceptions(error).exception();
     }

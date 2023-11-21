@@ -1,8 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 
-import CustomError, { ErrorType } from '@common/errors/CustomError';
-
 import { ReqUser, User, UserProps } from '../domain/model';
 import IUserRepository from '../domain/user.repository';
 import SignUpCommandHandler from './useCases/auth/signUp/SignUp.command-handler';
@@ -13,7 +11,7 @@ import LogOutCommandHandler from './useCases/auth/logOut/LogOut.command-handler'
 import LogOutCommand from './useCases/auth/logOut/LogOut.command';
 import RefreshTokensCommandHandler from './useCases/auth/refreshTokens/RefreshTokens.command-handler';
 import RefreshTokensCommand from './useCases/auth/refreshTokens/RefreshTokens.command';
-import UserError from '../domain/error';
+import { checkIfNotExpires } from './authorization';
 
 export type Tokens = { accessToken: string; refreshToken: string };
 
@@ -44,7 +42,7 @@ class AuthCommands {
 
   async logOut(user: ReqUser): Promise<void> {
     const userId = user['sub'];
-    this.checkIfNotExpires(user['exp']);
+    checkIfNotExpires(user['exp']);
 
     return await new LogOutCommandHandler(this.userRepository).handle(
       new LogOutCommand(userId),
@@ -53,7 +51,7 @@ class AuthCommands {
 
   async refreshTokens(user: ReqUser, refreshToken: string): Promise<Tokens> {
     const userId = user['sub'];
-    this.checkIfNotExpires(user['exp']);
+    checkIfNotExpires(user['exp']);
 
     return await new RefreshTokensCommandHandler(this.userRepository).handle(
       new RefreshTokensCommand(userId, refreshToken),
@@ -80,17 +78,6 @@ class AuthCommands {
     };
 
     return generate;
-  }
-
-  private checkIfNotExpires(date: number): void {
-    const now = Math.floor(new Date().getTime() / 1000);
-
-    if (date < now) {
-      throw new CustomError({
-        type: ErrorType.forbidden,
-        message: UserError[ErrorType.forbidden].accessDenied,
-      });
-    }
   }
 }
 

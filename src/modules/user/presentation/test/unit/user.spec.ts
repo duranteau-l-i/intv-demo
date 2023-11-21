@@ -24,7 +24,7 @@ const admin = new User({
 });
 
 const exp = makeExpiredDate(15);
-const userJWT = makeUserJWTToken(admin, exp);
+const reqUser = makeUserJWTToken(admin, exp);
 
 describe('User', () => {
   let userQueries: UserQueries;
@@ -62,7 +62,7 @@ describe('User', () => {
     it('should return a empty list', async () => {
       userRepository.seedUsers([]);
 
-      const users = await userQueries.getUsers(userJWT);
+      const users = await userQueries.getUsers(reqUser);
 
       expect(users).toEqual({
         count: 0,
@@ -73,6 +73,14 @@ describe('User', () => {
         pages: 0,
         perPage: 10,
       });
+    });
+
+    it('should return an error access denied', async () => {
+      userRepository.seedUsers([]);
+
+      await expect(
+        userQueries.getUsers({ ...reqUser, role: Role.user }),
+      ).rejects.toThrowError(UserError[ErrorType.forbidden].accessDenied);
     });
 
     it('should return a list of users', async () => {
@@ -97,7 +105,7 @@ describe('User', () => {
 
       userRepository.seedUsers([user1, user2]);
 
-      const users = await userQueries.getUsers(userJWT);
+      const users = await userQueries.getUsers(reqUser);
 
       expect(users).toMatchObject({
         count: 2,
@@ -128,7 +136,7 @@ describe('User', () => {
         ],
       });
 
-      const usersLastName = await userQueries.getUsers(userJWT, {
+      const usersLastName = await userQueries.getUsers(reqUser, {
         orderValue: 'lastName',
       });
 
@@ -161,7 +169,7 @@ describe('User', () => {
         ],
       });
 
-      const usersDesc = await userQueries.getUsers(userJWT, {
+      const usersDesc = await userQueries.getUsers(reqUser, {
         orderBy: OrderBy.DESC,
       });
 
@@ -274,7 +282,7 @@ describe('User', () => {
         password: 'Abcd1!',
       };
 
-      const user = await userCommands.createUser(user1 as UserProps);
+      const user = await userCommands.createUser(reqUser, user1 as UserProps);
 
       expect(userToViewModel(user)).toEqual({
         id: 'user1',
@@ -299,7 +307,9 @@ describe('User', () => {
         role: Role.admin,
       };
 
-      await expect(userCommands.createUser(user1)).rejects.toThrowError(
+      await expect(
+        userCommands.createUser(reqUser, user1),
+      ).rejects.toThrowError(
         UserError[ErrorType.badRequest].minLength('firstName'),
       );
     });
@@ -317,7 +327,9 @@ describe('User', () => {
         role: Role.admin,
       };
 
-      await expect(userCommands.createUser(user1)).rejects.toThrowError(
+      await expect(
+        userCommands.createUser(reqUser, user1),
+      ).rejects.toThrowError(
         UserError[ErrorType.badRequest].minLength('username'),
       );
     });
@@ -335,7 +347,9 @@ describe('User', () => {
         role: Role.admin,
       };
 
-      await expect(userCommands.createUser(user1)).rejects.toThrowError(
+      await expect(
+        userCommands.createUser(reqUser, user1),
+      ).rejects.toThrowError(
         UserError[ErrorType.badRequest].notValidEmailAddress,
       );
     });
@@ -353,7 +367,9 @@ describe('User', () => {
         role: Role.admin,
       };
 
-      await expect(userCommands.createUser(user1)).rejects.toThrowError(
+      await expect(
+        userCommands.createUser(reqUser, user1),
+      ).rejects.toThrowError(
         UserError[ErrorType.badRequest].notValidEmailAddress,
       );
     });
@@ -373,7 +389,7 @@ describe('User', () => {
 
       userRepository.seedUsers([user1]);
 
-      const user = await userCommands.updateUser(user1.id, {
+      const user = await userCommands.updateUser(reqUser, user1.id, {
         firstName: 'john updated',
         lastName: 'doe updated',
       });
@@ -402,7 +418,7 @@ describe('User', () => {
       userRepository.seedUsers([user1]);
 
       await expect(
-        userCommands.updateUser(user1.id, {
+        userCommands.updateUser(reqUser, user1.id, {
           firstName: 'jo',
         }),
       ).rejects.toThrowError(
@@ -424,7 +440,7 @@ describe('User', () => {
       userRepository.seedUsers([user1]);
 
       await expect(
-        userCommands.updateUser(user1.id, {
+        userCommands.updateUser(reqUser, user1.id, {
           lastName: 'do',
         }),
       ).rejects.toThrowError(
@@ -455,7 +471,7 @@ describe('User', () => {
       });
 
       userRepository.seedUsers([user1, user2]);
-      await userCommands.removeUser(user2.id);
+      await userCommands.removeUser(reqUser, user2.id);
 
       expect(userRepository.users).toEqual([
         new User({
@@ -492,9 +508,9 @@ describe('User', () => {
 
       userRepository.seedUsers([user1, user2]);
 
-      await expect(userCommands.removeUser('wrong-id')).rejects.toThrowError(
-        UserError[ErrorType.notFound].byId,
-      );
+      await expect(
+        userCommands.removeUser(reqUser, 'wrong-id'),
+      ).rejects.toThrowError(UserError[ErrorType.notFound].byId);
 
       expect(userRepository.users).toEqual([
         new User({
