@@ -10,5 +10,6 @@ export const userToDomain = (user: UserEntity): User => {
     username: user.username,
     password: user.password,
     role: Role[user.role],
+    refreshToken: user.refreshToken,
   });
 };

@@ -24,6 +24,7 @@ describe('Auth', () => {
   let server: INestApplication;
 
   let accessToken: string;
+  let refreshToken: string;
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
@@ -85,6 +86,7 @@ describe('Auth', () => {
       .expect(201);
 
     accessToken = res.body.accessToken;
+    refreshToken = res.body.refreshToken;
 
     expect(res.body.accessToken).not.toBeNull();
     expect(res.body.refreshToken).not.toBeNull();
@@ -116,6 +118,20 @@ describe('Auth', () => {
       .expect(201);
 
     accessToken = res.body.accessToken;
+    refreshToken = res.body.refreshToken;
+
+    expect(res.body.accessToken).not.toBeNull();
+    expect(res.body.refreshToken).not.toBeNull();
+  });
+
+  it(`/GET refresh tokens`, async () => {
+    const res = await request(server)
+      .get('/auth/refresh-tokens')
+      .set('Authorization', `Bearer ${refreshToken}`)
+      .expect(200);
+
+    accessToken = res.body.accessToken;
+    refreshToken = res.body.refreshToken;
 
     expect(res.body.accessToken).not.toBeNull();
     expect(res.body.refreshToken).not.toBeNull();

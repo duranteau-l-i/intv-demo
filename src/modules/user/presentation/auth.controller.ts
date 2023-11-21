@@ -7,7 +7,7 @@ import AuthCommands, { Tokens } from '../application/auth.commands';
 import CreateUserDTO from './dto/CreateUser';
 import { UserProps } from '../domain/model';
 import SignInDTO from './dto/SignIn';
-import { AccessTokenGuard } from '../../../common/guards';
+import { AccessTokenGuard, RefreshTokenGuard } from '../../../common/guards';
 import { UserViewModel, userToViewModel } from './mapper/user.mapper';
 
 @Controller('/auth')
@@ -46,7 +46,22 @@ class AuthController {
   @Get('/logout')
   async logOut(@Req() req: Request): Promise<void> {
     try {
-      return await this.authCommands.logOut(req.user['sub']);
+      const userId = req.user['sub'];
+
+      return await this.authCommands.logOut(userId);
+    } catch (error) {
+      throw new HttpExceptions(error).exception();
+    }
+  }
+
+  @UseGuards(RefreshTokenGuard)
+  @Get('/refresh-tokens')
+  async refreshTokens(@Req() req: Request): Promise<Tokens> {
+    try {
+      const userId = req.user['sub'];
+      const refreshToken = req.user['refreshToken'];
+
+      return await this.authCommands.refreshTokens(userId, refreshToken);
     } catch (error) {
       throw new HttpExceptions(error).exception();
     }
