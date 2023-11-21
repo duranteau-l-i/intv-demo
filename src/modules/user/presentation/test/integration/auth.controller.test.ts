@@ -86,8 +86,8 @@ describe('Auth', () => {
     accessToken = res.body.accessToken;
     refreshToken = res.body.refreshToken;
 
-    expect(res.body.accessToken).not.toBeNull();
-    expect(res.body.refreshToken).not.toBeNull();
+    expect(res.body.tokens.accessToken).not.toBeNull();
+    expect(res.body.tokens.refreshToken).not.toBeNull();
   });
 
   it(`/POST signIn - wrong password`, async () => {

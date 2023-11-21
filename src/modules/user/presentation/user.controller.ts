@@ -7,9 +7,12 @@ import {
   Patch,
   Post,
   Query,
+  Req,
   UseGuards,
 } from '@nestjs/common';
+import { Request } from 'express';
 
+import { AccessTokenGuard } from '@common/guards';
 import HttpExceptions from '@common/errors/HttpExceptions';
 import { PaginationOptions, PaginationResponse } from '@common/types';
 
@@ -17,9 +20,8 @@ import UserQueries from '../application/user.queries';
 import { UserViewModel, userToViewModel } from './mapper/user.mapper';
 import UserCommands from '../application/user.commands';
 import CreateUserDTO from './dto/CreateUser';
-import { UserProps } from '../domain/model';
+import { ReqUser, UserProps } from '../domain/model';
 import UpdateUserDTO from './dto/UpdateUser';
-import { AccessTokenGuard } from '@common/guards';
 
 @UseGuards(AccessTokenGuard)
 @Controller('/users')
@@ -31,11 +33,15 @@ class UserController {
 
   @Get()
   async getUsers(
+    @Req() req: Request,
     @Query()
     queryParams?: PaginationOptions,
   ): Promise<PaginationResponse<UserViewModel>> {
     try {
-      const response = await this.userQueries.getUsers(queryParams);
+      const response = await this.userQueries.getUsers(
+        req.user as ReqUser,
+        queryParams,
+      );
 
       return {
         ...response,

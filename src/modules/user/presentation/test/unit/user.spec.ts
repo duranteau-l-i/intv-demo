@@ -11,6 +11,20 @@ import { ErrorType } from '@common/errors/CustomError';
 import { User, Role, UserProps } from '../../../domain/model';
 import UserError from '../../../domain/error';
 import { userToViewModel } from '../../mapper/user.mapper';
+import { makeExpiredDate, makeUserJWTToken } from '../utils/userToken';
+
+const admin = new User({
+  id: 'admin',
+  firstName: 'john',
+  lastName: 'doe',
+  email: 'admin@test.com',
+  username: 'admin',
+  password: 'Abcd1!',
+  role: Role.admin,
+});
+
+const exp = makeExpiredDate(15);
+const userJWT = makeUserJWTToken(admin, exp);
 
 describe('User', () => {
   let userQueries: UserQueries;
@@ -48,7 +62,7 @@ describe('User', () => {
     it('should return a empty list', async () => {
       userRepository.seedUsers([]);
 
-      const users = await userQueries.getUsers();
+      const users = await userQueries.getUsers(userJWT);
 
       expect(users).toEqual({
         count: 0,
@@ -83,7 +97,7 @@ describe('User', () => {
 
       userRepository.seedUsers([user1, user2]);
 
-      const users = await userQueries.getUsers();
+      const users = await userQueries.getUsers(userJWT);
 
       expect(users).toMatchObject({
         count: 2,
@@ -114,7 +128,7 @@ describe('User', () => {
         ],
       });
 
-      const usersLastName = await userQueries.getUsers({
+      const usersLastName = await userQueries.getUsers(userJWT, {
         orderValue: 'lastName',
       });
 
@@ -147,7 +161,7 @@ describe('User', () => {
         ],
       });
 
-      const usersDesc = await userQueries.getUsers({
+      const usersDesc = await userQueries.getUsers(userJWT, {
         orderBy: OrderBy.DESC,
       });
 

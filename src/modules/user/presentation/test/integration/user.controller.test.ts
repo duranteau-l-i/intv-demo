@@ -4,6 +4,7 @@ import * as request from 'supertest';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { JwtModule } from '@nestjs/jwt';
+import { DataSource } from 'typeorm';
 
 import { ErrorType } from '@common/errors/CustomError';
 import { AccessTokenStrategy, RefreshTokenStrategy } from '@common/guards';
@@ -13,14 +14,17 @@ import UserQueries from '../../../application/user.queries';
 import UserRepository from '../../../infrastructure/UserRepository';
 import UserController from '../../user.controller';
 import UserEntity from '../../../infrastructure/entities/User.entity';
-import { DataSource } from 'typeorm';
 import { Role } from '../../../domain/model';
 import UserError from '../../../domain/error';
+import AuthController from '../../auth.controller';
+import AuthCommands from '../../../application/auth.commands';
 
-describe.skip('User', () => {
+describe('User', () => {
   let app: INestApplication;
   let dataSource: DataSource;
   let server: INestApplication;
+
+  let accessToken: string;
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
@@ -41,10 +45,11 @@ describe.skip('User', () => {
         TypeOrmModule.forFeature([UserEntity]),
         JwtModule.register({}),
       ],
-      controllers: [UserController],
+      controllers: [UserController, AuthController],
       providers: [
         UserQueries,
         UserCommands,
+        AuthCommands,
         {
           provide: 'UserRepository',
           useClass: UserRepository,
@@ -67,21 +72,9 @@ describe.skip('User', () => {
     server.close();
   });
 
-  it(`/GET users`, () => {
-    return request(server).get('/users').expect(200).expect({
-      data: [],
-      count: 0,
-      pages: 0,
-      orderBy: 'ASC',
-      orderValue: 'username',
-      perPage: 10,
-      page: 1,
-    });
-  });
-
-  it(`/POST users`, () => {
-    return request(server)
-      .post('/users')
+  it(`/POST signUp`, async () => {
+    const res = await request(server)
+      .post('/auth/signup')
       .send({
         id: 'user1',
         firstName: 'john',
@@ -91,19 +84,19 @@ describe.skip('User', () => {
         password: 'Abcd1!',
         role: Role.admin,
       })
-      .expect(201)
-      .expect({
-        id: 'user1',
-        firstName: 'john',
-        lastName: 'doe',
-        email: 'user1@test.com',
-        username: 'user1',
-        role: Role.admin,
-      });
+      .expect(201);
+
+    accessToken = res.body.tokens.accessToken;
+
+    expect(res.body.tokens.accessToken).not.toBeNull();
+    expect(res.body.tokens.refreshToken).not.toBeNull();
   });
 
   it(`/GET users`, async () => {
-    const res = await request(server).get('/users').expect(200);
+    const res = await request(server)
+      .get('/users')
+      .set('Authorization', `Bearer ${accessToken}`)
+      .expect(200);
 
     expect(res.body).toEqual(
       expect.objectContaining({
@@ -127,27 +120,36 @@ describe.skip('User', () => {
   });
 
   it(`/GET users/:id`, async () => {
-    await request(server).get('/users/user1').expect(200).expect({
-      id: 'user1',
-      firstName: 'john',
-      lastName: 'doe',
-      email: 'user1@test.com',
-      username: 'user1',
-      role: Role.admin,
-    });
+    await request(server)
+      .get('/users/user1')
+      .set('Authorization', `Bearer ${accessToken}`)
+      .expect(200)
+      .expect({
+        id: 'user1',
+        firstName: 'john',
+        lastName: 'doe',
+        email: 'user1@test.com',
+        username: 'user1',
+        role: Role.admin,
+      });
   });
 
   it(`/GET users/:wrong-id`, async () => {
-    await request(server).get('/users/wrong-id').expect(404).expect({
-      statusCode: 404,
-      message: UserError[ErrorType.notFound].byId,
-      error: 'Not Found',
-    });
+    await request(server)
+      .get('/users/wrong-id')
+      .set('Authorization', `Bearer ${accessToken}`)
+      .expect(404)
+      .expect({
+        statusCode: 404,
+        message: UserError[ErrorType.notFound].byId,
+        error: 'Not Found',
+      });
   });
 
   it(`/PATCH users/:id - error`, async () => {
     await request(server)
       .patch('/users/user1')
+      .set('Authorization', `Bearer ${accessToken}`)
       .send({
         firstName: 'jo',
         lastName: 'doe',
@@ -163,6 +165,7 @@ describe.skip('User', () => {
   it(`/PATCH users/:id`, async () => {
     await request(server)
       .patch('/users/user1')
+      .set('Authorization', `Bearer ${accessToken}`)
       .send({
         firstName: 'steve',
         lastName: 'doe',
@@ -181,6 +184,7 @@ describe.skip('User', () => {
   it(`/POST users`, async () => {
     await request(server)
       .post('/users')
+      .set('Authorization', `Bearer ${accessToken}`)
       .send({
         id: 'user2',
         firstName: 'steve',
@@ -202,7 +206,10 @@ describe.skip('User', () => {
   });
 
   it(`/GET users`, async () => {
-    const res = await request(server).get('/users').expect(200);
+    const res = await request(server)
+      .get('/users')
+      .set('Authorization', `Bearer ${accessToken}`)
+      .expect(200);
 
     expect(res.body).toEqual(
       expect.objectContaining({
@@ -234,19 +241,29 @@ describe.skip('User', () => {
   });
 
   it(`/DELETE users/:id`, async () => {
-    await request(server).delete('/users/user2').expect(200);
+    await request(server)
+      .delete('/users/user2')
+      .set('Authorization', `Bearer ${accessToken}`)
+      .expect(200);
   });
 
   it(`/DELETE users/:id`, async () => {
-    await request(server).delete('/users/user3').expect(404).expect({
-      statusCode: 404,
-      message: UserError[ErrorType.notFound].byId,
-      error: 'Not Found',
-    });
+    await request(server)
+      .delete('/users/user3')
+      .set('Authorization', `Bearer ${accessToken}`)
+      .expect(404)
+      .expect({
+        statusCode: 404,
+        message: UserError[ErrorType.notFound].byId,
+        error: 'Not Found',
+      });
   });
 
   it(`/GET users`, async () => {
-    const res = await request(server).get('/users').expect(200);
+    const res = await request(server)
+      .get('/users')
+      .set('Authorization', `Bearer ${accessToken}`)
+      .expect(200);
 
     expect(res.body).toEqual(
       expect.objectContaining({

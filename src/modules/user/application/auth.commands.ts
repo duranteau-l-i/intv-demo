@@ -3,7 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 
 import CustomError, { ErrorType } from '@common/errors/CustomError';
 
-import { User, UserProps } from '../domain/model';
+import { ReqUser, User, UserProps } from '../domain/model';
 import IUserRepository from '../domain/user.repository';
 import SignUpCommandHandler from './useCases/auth/signUp/SignUp.command-handler';
 import SignUpCommand from './useCases/auth/signUp/SignUp.command';
@@ -42,7 +42,7 @@ class AuthCommands {
     );
   }
 
-  async logOut(user: Express.User): Promise<void> {
+  async logOut(user: ReqUser): Promise<void> {
     const userId = user['sub'];
     this.checkIfNotExpires(user['exp']);
 
@@ -51,10 +51,7 @@ class AuthCommands {
     );
   }
 
-  async refreshTokens(
-    user: Express.User,
-    refreshToken: string,
-  ): Promise<Tokens> {
+  async refreshTokens(user: ReqUser, refreshToken: string): Promise<Tokens> {
     const userId = user['sub'];
     this.checkIfNotExpires(user['exp']);
 
