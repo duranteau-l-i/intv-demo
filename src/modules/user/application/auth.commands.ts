@@ -9,6 +9,10 @@ import SignInCommandHandler from './useCases/signIn/SignIn.command-handler';
 import SignInCommand from './useCases/signIn/SignIn.command';
 import LogOutCommandHandler from './useCases/logOut/LogOut.command-handler';
 import LogOutCommand from './useCases/logOut/LogOut.command';
+import RefreshTokensCommandHandler from './useCases/refreshTokens/RefreshTokens.command-handler';
+import RefreshTokensCommand from './useCases/refreshTokens/RefreshTokens.command';
+
+export type Tokens = { accessToken: string; refreshToken: string };
 
 @Injectable()
 class AuthCommands {
@@ -19,7 +23,7 @@ class AuthCommands {
   ) {}
 
   async signUp(user: UserProps): Promise<{
-    tokens: { accessToken: string; refreshToken: string };
+    tokens: Tokens;
     user: User;
   }> {
     return await new SignUpCommandHandler(this.userRepository).handle(
@@ -28,10 +32,7 @@ class AuthCommands {
     );
   }
 
-  async signIn(
-    username: string,
-    password: string,
-  ): Promise<{ accessToken: string; refreshToken: string }> {
+  async signIn(username: string, password: string): Promise<Tokens> {
     return await new SignInCommandHandler(this.userRepository).handle(
       new SignInCommand(username, password),
       this.generateTokens(this.jwtService),
@@ -41,6 +42,13 @@ class AuthCommands {
   async logOut(id: string): Promise<void> {
     return await new LogOutCommandHandler(this.userRepository).handle(
       new LogOutCommand(id),
+    );
+  }
+
+  async refreshTokens(id: string, refreshToken: string): Promise<Tokens> {
+    return await new RefreshTokensCommandHandler(this.userRepository).handle(
+      new RefreshTokensCommand(id, refreshToken),
+      this.generateTokens(this.jwtService),
     );
   }
 

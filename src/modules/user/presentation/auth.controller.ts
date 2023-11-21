@@ -3,7 +3,7 @@ import { Request } from 'express';
 
 import HttpExceptions from '../../../common/errors/HttpExceptions';
 
-import AuthCommands from '../application/auth.commands';
+import AuthCommands, { Tokens } from '../application/auth.commands';
 import CreateUserDTO from './dto/CreateUser';
 import { UserProps } from '../domain/model';
 import SignInDTO from './dto/SignIn';
@@ -16,7 +16,7 @@ class AuthController {
 
   @Post('/signup')
   async signUp(@Body() createUserDTO: CreateUserDTO): Promise<{
-    tokens: { accessToken: string; refreshToken: string };
+    tokens: Tokens;
     user: UserViewModel;
   }> {
     try {
@@ -29,9 +29,7 @@ class AuthController {
   }
 
   @Post('/signin')
-  async signIn(
-    @Body() signInDTO: SignInDTO,
-  ): Promise<{ accessToken: string; refreshToken: string }> {
+  async signIn(@Body() signInDTO: SignInDTO): Promise<Tokens> {
     try {
       const tokens = await this.authCommands.signIn(
         signInDTO.username,

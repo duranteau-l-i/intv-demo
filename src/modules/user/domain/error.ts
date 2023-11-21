@@ -13,6 +13,9 @@ const UserError = {
     userAlreadyExists: 'The user already exists',
     signIn: 'The username or password is wrong',
   },
+  [ErrorType.forbidden]: {
+    accessDenied: 'Access denied',
+  },
 };
 
 export default UserError;

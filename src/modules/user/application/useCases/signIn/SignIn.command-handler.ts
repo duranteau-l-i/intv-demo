@@ -7,6 +7,7 @@ import SignInCommand from './SignIn.command';
 import UserError from '../../../domain/error';
 import Hash from '../../../../../utils/Hash';
 import Password from '../../../domain/model/Password';
+import { Tokens } from '../../auth.commands';
 
 class SignInCommandHandler implements ICommandHandler {
   constructor(private userRepository: IUserRepository) {}
@@ -17,11 +18,8 @@ class SignInCommandHandler implements ICommandHandler {
       sub: string;
       username: string;
       role: string;
-    }) => Promise<{ accessToken: string; refreshToken: string }>,
-  ): Promise<{
-    accessToken: string;
-    refreshToken: string;
-  }> {
+    }) => Promise<Tokens>,
+  ): Promise<Tokens> {
     try {
       const user = await this.userRepository.getUserByUsername(
         command.username,

@@ -8,6 +8,7 @@ import UserError from '../../../domain/error';
 import SignUpCommand from './SignUp.command';
 import Hash from '../../../../../utils/Hash';
 import { User } from '../../../domain/model';
+import { Tokens } from '../../auth.commands';
 
 class SignUpCommandHandler implements ICommandHandler {
   constructor(private userRepository: IUserRepository) {}
@@ -18,9 +19,9 @@ class SignUpCommandHandler implements ICommandHandler {
       sub: string;
       username: string;
       role: string;
-    }) => Promise<{ accessToken: string; refreshToken: string }>,
+    }) => Promise<Tokens>,
   ): Promise<{
-    tokens: { accessToken: string; refreshToken: string };
+    tokens: Tokens;
     user: User;
   }> {
     await command.createUserEntity();

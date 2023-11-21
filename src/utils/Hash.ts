@@ -18,8 +18,11 @@ class Hash extends ValueObject<Hash> {
     return this.value;
   }
 
-  verifyHash(value: string, initialValue: string) {
-    argon2.verify(value, initialValue);
+  async verifyHash(
+    hashedValue: string,
+    valueToCompare: string,
+  ): Promise<boolean> {
+    return await argon2.verify(hashedValue, valueToCompare);
   }
 }
 

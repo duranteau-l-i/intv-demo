@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ConfigModule } from '@nestjs/config';
-import { JwtModule } from '@nestjs/jwt';
+import { JwtModule, JwtService } from '@nestjs/jwt';
 
 import UserInMemoryRepository from '../../../infrastructure/UserInMemoryRepository';
 import { User, Role, UserProps } from '../../../domain/model';
@@ -13,6 +13,7 @@ import {
   RefreshTokenStrategy,
 } from '../../../../../common/guards';
 import { userToViewModel } from '../../mapper/user.mapper';
+import Hash from '../../../../../utils/Hash';
 
 describe('Auth', () => {
   let userRepository: UserInMemoryRepository;
@@ -144,6 +145,86 @@ describe('Auth', () => {
 
       const user = userRepository.users[0];
       expect(user.refreshToken).toBeNull();
+    });
+  });
+
+  describe('refreshTokens', () => {
+    it('should return new tokens', async () => {
+      const refreshToken = await new JwtService().signAsync(
+        {
+          id: 'user1',
+          username: 'user1',
+          role: Role.admin,
+        },
+        {
+          secret: process.env.JWT_REFRESH_SECRET,
+          expiresIn: '7d',
+        },
+      );
+      const hash = new Hash();
+      const hashedRefreshToken = await hash.hash(refreshToken);
+
+      const pass = 'Abcd1!';
+      const password = new Password(pass);
+      const passwordHashed = await password.hash();
+
+      const user1 = new User({
+        id: 'user1',
+        firstName: 'john',
+        lastName: 'doe',
+        email: 'user1@test.com',
+        username: 'user1',
+        password: passwordHashed,
+        role: Role.admin,
+        refreshToken: hashedRefreshToken,
+      });
+
+      userRepository.seedUsers([user1]);
+
+      const tokens = await authCommands.refreshTokens(
+        user1.id,
+        hashedRefreshToken,
+      );
+
+      expect(tokens.accessToken).not.toBeNull();
+      expect(tokens.refreshToken).not.toBeNull();
+    });
+
+    it('should return an error access denied if no valid refreshToken', async () => {
+      const refreshToken = await new JwtService().signAsync(
+        {
+          id: 'user1',
+          username: 'user1',
+          role: Role.admin,
+        },
+        {
+          secret: process.env.JWT_REFRESH_SECRET,
+          expiresIn: '7d',
+        },
+      );
+      const hash = new Hash();
+      const hashedRefreshToken = await hash.hash(refreshToken);
+
+      const pass = 'Abcd1!';
+      const password = new Password(pass);
+      const passwordHashed = await password.hash();
+
+      const user1 = new User({
+        id: 'user1',
+        firstName: 'john',
+        lastName: 'doe',
+        email: 'user1@test.com',
+        username: 'user1',
+        password: passwordHashed,
+        role: Role.admin,
+        refreshToken: hashedRefreshToken,
+      });
+
+      userRepository.seedUsers([user1]);
+
+      await expect(
+        authCommands.refreshTokens(user1.id, 'wrong-refreshToken'),
+      ).rejects.toThrowError(UserError[ErrorType.forbidden].accessDenied);
     });
   });
 });
