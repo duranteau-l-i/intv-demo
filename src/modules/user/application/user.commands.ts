@@ -19,8 +19,8 @@ class UserCommands {
   ) {}
 
   async createUser(user: ReqUser, newUser: UserProps): Promise<User> {
-    checkIfNotExpires(user['exp']);
-    checkIfAllows(user['role']);
+    await checkIfNotExpires(user['exp']);
+    await checkIfAllows(user['role']);
 
     return await new CreateUserCommandHandler(this.userRepository).handle(
       new CreateUserCommand(newUser),
@@ -28,8 +28,8 @@ class UserCommands {
   }
 
   async updateUser(user: ReqUser, id: string, data: Partial<UserProps>) {
-    checkIfNotExpires(user['exp']);
-    checkIfAllows(user['role']);
+    await checkIfNotExpires(user['exp']);
+    await checkIfAllows(user['role']);
 
     return await new UpdateUserCommandHandler(this.userRepository).handle(
       new UpdateUserCommand(id, data),
@@ -37,8 +37,8 @@ class UserCommands {
   }
 
   async removeUser(user: ReqUser, id: string) {
-    checkIfNotExpires(user['exp']);
-    checkIfAllows(user['role']);
+    await checkIfNotExpires(user['exp']);
+    await checkIfAllows(user['role']);
 
     return await new RemoveUserCommandHandler(this.userRepository).handle(
       new RemoveUserCommand(id),

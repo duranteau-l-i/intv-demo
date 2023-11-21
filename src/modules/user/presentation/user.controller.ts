@@ -15,15 +15,17 @@ import { Request } from 'express';
 import { AccessTokenGuard } from '@common/guards';
 import HttpExceptions from '@common/errors/HttpExceptions';
 import { PaginationOptions, PaginationResponse } from '@common/types';
+import RolesGuard, { Roles } from '@common/guards/Role.guard';
 
 import UserQueries from '../application/user.queries';
 import { UserViewModel, userToViewModel } from './mapper/user.mapper';
 import UserCommands from '../application/user.commands';
 import CreateUserDTO from './dto/CreateUser';
-import { ReqUser, UserProps } from '../domain/model';
+import { ReqUser, Role, UserProps } from '../domain/model';
 import UpdateUserDTO from './dto/UpdateUser';
 
-@UseGuards(AccessTokenGuard)
+@UseGuards(AccessTokenGuard, RolesGuard)
+@Roles(Role.admin, Role.editor)
 @Controller('/users')
 class UserController {
   constructor(

@@ -24,7 +24,8 @@ describe('User', () => {
   let dataSource: DataSource;
   let server: INestApplication;
 
-  let accessToken: string;
+  let accessToken: string = null;
+  let accessTokenUser: string = null;
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
@@ -68,8 +69,39 @@ describe('User', () => {
 
   afterAll(async () => {
     await dataSource.getRepository(UserEntity).delete({ id: 'user1' });
+
+    accessToken = null;
+    accessTokenUser = null;
+
     await app.close();
     server.close();
+  });
+
+  it(`/POST signUp`, async () => {
+    const res = await request(server)
+      .post('/auth/signup')
+      .send({
+        id: 'user',
+        firstName: 'john',
+        lastName: 'doe',
+        email: 'user@test.com',
+        username: 'user',
+        password: 'Abcd1!',
+        role: Role.user,
+      })
+      .expect(201);
+
+    accessTokenUser = res.body.tokens.accessToken;
+
+    expect(res.body.tokens.accessToken).not.toBeNull();
+    expect(res.body.tokens.refreshToken).not.toBeNull();
+  });
+
+  it(`/GET users`, async () => {
+    await request(server)
+      .get('/users')
+      .set('Authorization', `Bearer ${accessTokenUser}`)
+      .expect(403);
   });
 
   it(`/POST signUp`, async () => {
@@ -90,6 +122,13 @@ describe('User', () => {
 
     expect(res.body.tokens.accessToken).not.toBeNull();
     expect(res.body.tokens.refreshToken).not.toBeNull();
+  });
+
+  it(`/DELETE users/:id`, async () => {
+    await request(server)
+      .delete('/users/user')
+      .set('Authorization', `Bearer ${accessToken}`)
+      .expect(200);
   });
 
   it(`/GET users`, async () => {

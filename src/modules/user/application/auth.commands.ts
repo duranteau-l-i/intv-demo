@@ -42,7 +42,7 @@ class AuthCommands {
 
   async logOut(user: ReqUser): Promise<void> {
     const userId = user['sub'];
-    checkIfNotExpires(user['exp']);
+    await checkIfNotExpires(user['exp']);
 
     return await new LogOutCommandHandler(this.userRepository).handle(
       new LogOutCommand(userId),
@@ -51,7 +51,7 @@ class AuthCommands {
 
   async refreshTokens(user: ReqUser, refreshToken: string): Promise<Tokens> {
     const userId = user['sub'];
-    checkIfNotExpires(user['exp']);
+    await checkIfNotExpires(user['exp']);
 
     return await new RefreshTokensCommandHandler(this.userRepository).handle(
       new RefreshTokensCommand(userId, refreshToken),

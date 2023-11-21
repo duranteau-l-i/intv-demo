@@ -21,8 +21,8 @@ describe('Auth', () => {
   let dataSource: DataSource;
   let server: INestApplication;
 
-  let accessToken: string;
-  let refreshToken: string;
+  let accessToken: string = null;
+  let refreshToken: string = null;
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
@@ -66,6 +66,10 @@ describe('Auth', () => {
     await dataSource
       .getRepository(UserEntity)
       .delete({ username: 'userAuth1' });
+
+    accessToken = null;
+    refreshToken = null;
+
     await app.close();
     server.close();
   });

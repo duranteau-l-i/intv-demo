@@ -110,6 +110,7 @@ class UserRepository implements IUserRepository {
         lastName: user.lastName,
         refreshToken: user.refreshToken,
       })
+      .where({ id: user.id })
       .execute();
 
     return user;
