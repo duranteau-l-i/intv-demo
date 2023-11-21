@@ -1,13 +1,13 @@
-import Hash from '../../../../../utils/Hash';
-import { ICommandHandler } from '../../../../../common/domain/CommandHandler';
-import IUserRepository from '../../../domain/user.repository';
+import Hash from '../../../../../../utils/Hash';
+import { ICommandHandler } from '../../../../../../common/domain/CommandHandler';
+import IUserRepository from '../../../../domain/user.repository';
 import RefreshTokensCommand from './RefreshTokens.command';
 import CustomError, {
   ErrorType,
-} from '../../../../../common/errors/CustomError';
-import UserError from '../../../../../modules/user/domain/error';
-import { User } from 'src/modules/user/domain/model';
-import { Tokens } from '../../auth.commands';
+} from '../../../../../../common/errors/CustomError';
+import UserError from '../../../../../../modules/user/domain/error';
+import { User } from '../../../../domain/model';
+import { Tokens } from '../../../auth.commands';
 
 class RefreshTokensCommandHandler implements ICommandHandler {
   constructor(private userRepository: IUserRepository) {}
@@ -31,10 +31,7 @@ class RefreshTokensCommandHandler implements ICommandHandler {
         role: user.role,
       });
 
-      await hash.hash(refreshToken);
-
-      user.refreshToken = hash.hashedRefreshToken;
-      await this.userRepository.updateUser(user);
+      await this.updateUser(hash, refreshToken, user);
 
       return {
         accessToken,
@@ -68,6 +65,13 @@ class RefreshTokensCommandHandler implements ICommandHandler {
     if (!refreshTokenMatches) throw new Error();
 
     return hash;
+  }
+
+  private async updateUser(hash: Hash, refreshToken: string, user: User) {
+    await hash.hash(refreshToken);
+
+    user.refreshToken = hash.hashedRefreshToken;
+    await this.userRepository.updateUser(user);
   }
 }
 

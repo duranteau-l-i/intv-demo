@@ -1,5 +1,5 @@
-import Password from '../../../domain/model/Password';
-import { User, Role, UserProps } from '../../../domain/model';
+import Password from '../../../../domain/model/Password';
+import { User, Role, UserProps } from '../../../../domain/model';
 
 class SignUpCommand {
   userProps: UserProps;

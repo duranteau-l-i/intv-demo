@@ -1,14 +1,14 @@
-import { ICommandHandler } from '../../../../../common/domain/CommandHandler';
+import { ICommandHandler } from '../../../../../../common/domain/CommandHandler';
 import CustomError, {
   ErrorType,
-} from '../../../../../common/errors/CustomError';
+} from '../../../../../../common/errors/CustomError';
 
-import IUserRepository from '../../../domain/user.repository';
-import UserError from '../../../domain/error';
+import IUserRepository from '../../../../domain/user.repository';
+import UserError from '../../../../domain/error';
 import SignUpCommand from './SignUp.command';
-import Hash from '../../../../../utils/Hash';
-import { User } from '../../../domain/model';
-import { Tokens } from '../../auth.commands';
+import Hash from '../../../../../../utils/Hash';
+import { User } from '../../../../domain/model';
+import { Tokens } from '../../../auth.commands';
 
 class SignUpCommandHandler implements ICommandHandler {
   constructor(private userRepository: IUserRepository) {}
@@ -42,11 +42,7 @@ class SignUpCommandHandler implements ICommandHandler {
       role: command.user.role,
     });
 
-    const hash = new Hash();
-    await hash.hash(refreshToken);
-
-    command.user.refreshToken = hash.hashedRefreshToken;
-    const userCreated = await this.userRepository.createUser(command.user);
+    const userCreated = await this.createUser(refreshToken, command);
 
     return {
       tokens: {
@@ -55,6 +51,15 @@ class SignUpCommandHandler implements ICommandHandler {
       },
       user: userCreated,
     };
+  }
+
+  private async createUser(refreshToken: string, command: SignUpCommand) {
+    const hash = new Hash();
+    await hash.hash(refreshToken);
+
+    command.user.refreshToken = hash.hashedRefreshToken;
+    const userCreated = await this.userRepository.createUser(command.user);
+    return userCreated;
   }
 }
 

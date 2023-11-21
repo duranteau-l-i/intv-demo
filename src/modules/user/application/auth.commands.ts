@@ -3,14 +3,14 @@ import { JwtService } from '@nestjs/jwt';
 
 import { User, UserProps } from '../domain/model';
 import IUserRepository from '../domain/user.repository';
-import SignUpCommandHandler from './useCases/signUp/SignUp.command-handler';
-import SignUpCommand from './useCases/signUp/SignUp.command';
-import SignInCommandHandler from './useCases/signIn/SignIn.command-handler';
-import SignInCommand from './useCases/signIn/SignIn.command';
-import LogOutCommandHandler from './useCases/logOut/LogOut.command-handler';
-import LogOutCommand from './useCases/logOut/LogOut.command';
-import RefreshTokensCommandHandler from './useCases/refreshTokens/RefreshTokens.command-handler';
-import RefreshTokensCommand from './useCases/refreshTokens/RefreshTokens.command';
+import SignUpCommandHandler from './useCases/auth/signUp/SignUp.command-handler';
+import SignUpCommand from './useCases/auth/signUp/SignUp.command';
+import SignInCommandHandler from './useCases/auth/signIn/SignIn.command-handler';
+import SignInCommand from './useCases/auth/signIn/SignIn.command';
+import LogOutCommandHandler from './useCases/auth/logOut/LogOut.command-handler';
+import LogOutCommand from './useCases/auth/logOut/LogOut.command';
+import RefreshTokensCommandHandler from './useCases/auth/refreshTokens/RefreshTokens.command-handler';
+import RefreshTokensCommand from './useCases/auth/refreshTokens/RefreshTokens.command';
 
 export type Tokens = { accessToken: string; refreshToken: string };
 
