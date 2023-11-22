@@ -54,6 +54,7 @@ class UserController {
     }
   }
 
+  @Roles(Role.admin, Role.editor, Role.user)
   @Get('/me')
   async getMe(@Req() req: Request): Promise<UserViewModel> {
     try {

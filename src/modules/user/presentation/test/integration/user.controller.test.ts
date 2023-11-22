@@ -68,7 +68,10 @@ describe('User', () => {
   });
 
   afterAll(async () => {
-    await dataSource.getRepository(UserEntity).delete({ id: 'user1' });
+    await dataSource.getRepository(UserEntity).delete({ id: 'user1_id' });
+    await dataSource.getRepository(UserEntity).delete({ id: 'user2_id' });
+    await dataSource.getRepository(UserEntity).delete({ id: 'user3_id' });
+    await dataSource.getRepository(UserEntity).delete({ id: 'user_id' });
 
     accessToken = null;
     accessTokenUser = null;
@@ -81,7 +84,7 @@ describe('User', () => {
     const res = await request(server)
       .post('/auth/signup')
       .send({
-        id: 'user',
+        id: 'user_id',
         firstName: 'john',
         lastName: 'doe',
         email: 'user@test.com',
@@ -104,11 +107,26 @@ describe('User', () => {
       .expect(403);
   });
 
+  it(`/GET me`, async () => {
+    await request(server)
+      .get('/users/me')
+      .set('Authorization', `Bearer ${accessTokenUser}`)
+      .expect(200)
+      .expect({
+        id: 'user_id',
+        firstName: 'john',
+        lastName: 'doe',
+        email: 'user@test.com',
+        username: 'user',
+        role: Role.user,
+      });
+  });
+
   it(`/POST signUp`, async () => {
     const res = await request(server)
       .post('/auth/signup')
       .send({
-        id: 'user1',
+        id: 'user1_id',
         firstName: 'john',
         lastName: 'doe',
         email: 'user1@test.com',
@@ -130,7 +148,7 @@ describe('User', () => {
       .set('Authorization', `Bearer ${accessToken}`)
       .expect(200)
       .expect({
-        id: 'user1',
+        id: 'user1_id',
         firstName: 'john',
         lastName: 'doe',
         email: 'user1@test.com',
@@ -141,7 +159,7 @@ describe('User', () => {
 
   it(`/DELETE users/:id`, async () => {
     await request(server)
-      .delete('/users/user')
+      .delete('/users/user_id')
       .set('Authorization', `Bearer ${accessToken}`)
       .expect(200);
   });
@@ -156,7 +174,7 @@ describe('User', () => {
       expect.objectContaining({
         data: expect.arrayContaining([
           {
-            id: 'user1',
+            id: 'user1_id',
             firstName: 'john',
             lastName: 'doe',
             email: 'user1@test.com',
@@ -175,11 +193,11 @@ describe('User', () => {
 
   it(`/GET users/:id`, async () => {
     await request(server)
-      .get('/users/user1')
+      .get('/users/user1_id')
       .set('Authorization', `Bearer ${accessToken}`)
       .expect(200)
       .expect({
-        id: 'user1',
+        id: 'user1_id',
         firstName: 'john',
         lastName: 'doe',
         email: 'user1@test.com',
@@ -202,7 +220,7 @@ describe('User', () => {
 
   it(`/PATCH users/:id - error`, async () => {
     await request(server)
-      .patch('/users/user1')
+      .patch('/users/user1_id')
       .set('Authorization', `Bearer ${accessToken}`)
       .send({
         firstName: 'jo',
@@ -218,7 +236,7 @@ describe('User', () => {
 
   it(`/PATCH users/:id`, async () => {
     await request(server)
-      .patch('/users/user1')
+      .patch('/users/user1_id')
       .set('Authorization', `Bearer ${accessToken}`)
       .send({
         firstName: 'steve',
@@ -226,7 +244,7 @@ describe('User', () => {
       })
       .expect(200)
       .expect({
-        id: 'user1',
+        id: 'user1_id',
         firstName: 'steve',
         lastName: 'doe',
         email: 'user1@test.com',
@@ -240,7 +258,7 @@ describe('User', () => {
       .post('/users')
       .set('Authorization', `Bearer ${accessToken}`)
       .send({
-        id: 'user2',
+        id: 'user2_id',
         firstName: 'steve',
         lastName: 'artist',
         email: 'user2@test.com',
@@ -250,7 +268,7 @@ describe('User', () => {
       })
       .expect(201)
       .expect({
-        id: 'user2',
+        id: 'user2_id',
         firstName: 'steve',
         lastName: 'artist',
         email: 'user2@test.com',
@@ -269,7 +287,7 @@ describe('User', () => {
       expect.objectContaining({
         data: expect.arrayContaining([
           {
-            id: 'user1',
+            id: 'user1_id',
             firstName: 'steve',
             lastName: 'doe',
             email: 'user1@test.com',
@@ -277,7 +295,7 @@ describe('User', () => {
             role: Role.admin,
           },
           {
-            id: 'user2',
+            id: 'user2_id',
             firstName: 'steve',
             lastName: 'artist',
             email: 'user2@test.com',
@@ -296,14 +314,14 @@ describe('User', () => {
 
   it(`/DELETE users/:id`, async () => {
     await request(server)
-      .delete('/users/user2')
+      .delete('/users/user2_id')
       .set('Authorization', `Bearer ${accessToken}`)
       .expect(200);
   });
 
   it(`/DELETE users/:id`, async () => {
     await request(server)
-      .delete('/users/user3')
+      .delete('/users/user3_id')
       .set('Authorization', `Bearer ${accessToken}`)
       .expect(404)
       .expect({
@@ -323,7 +341,7 @@ describe('User', () => {
       expect.objectContaining({
         data: expect.arrayContaining([
           {
-            id: 'user1',
+            id: 'user1_id',
             firstName: 'steve',
             lastName: 'doe',
             email: 'user1@test.com',

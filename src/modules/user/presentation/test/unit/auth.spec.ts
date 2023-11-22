@@ -82,7 +82,7 @@ describe('Auth', () => {
       const passwordHashed = await password.hash();
 
       const user1 = new User({
-        id: 'user1',
+        id: 'user1_id',
         firstName: 'john',
         lastName: 'doe',
         email: 'user1@test.com',
@@ -105,7 +105,7 @@ describe('Auth', () => {
       const passwordHashed = await password.hash();
 
       const user1 = new User({
-        id: 'user1',
+        id: 'user1_id',
         firstName: 'john',
         lastName: 'doe',
         email: 'user1@test.com',
@@ -129,7 +129,7 @@ describe('Auth', () => {
       const passwordHashed = await password.hash();
 
       const user1 = new User({
-        id: 'user1',
+        id: 'user1_id',
         firstName: 'john',
         lastName: 'doe',
         email: 'user1@test.com',
@@ -154,7 +154,7 @@ describe('Auth', () => {
     it('should return new tokens', async () => {
       const refreshToken = await new JwtService().signAsync(
         {
-          id: 'user1',
+          id: 'user1_id',
           username: 'user1',
           role: Role.admin,
         },
@@ -171,7 +171,7 @@ describe('Auth', () => {
       const passwordHashed = await password.hash();
 
       const user1 = new User({
-        id: 'user1',
+        id: 'user1_id',
         firstName: 'john',
         lastName: 'doe',
         email: 'user1@test.com',
@@ -198,7 +198,7 @@ describe('Auth', () => {
     it('should return an error access denied if no valid refreshToken', async () => {
       const refreshToken = await new JwtService().signAsync(
         {
-          id: 'user1',
+          id: 'user1_id',
           username: 'user1',
           role: Role.admin,
         },
@@ -215,7 +215,7 @@ describe('Auth', () => {
       const passwordHashed = await password.hash();
 
       const user1 = new User({
-        id: 'user1',
+        id: 'user1_id',
         firstName: 'john',
         lastName: 'doe',
         email: 'user1@test.com',

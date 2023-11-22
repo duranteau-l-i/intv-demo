@@ -85,7 +85,7 @@ describe('User', () => {
 
     it('should return a list of users', async () => {
       const user1 = new User({
-        id: 'user1',
+        id: 'user1_id',
         firstName: 'john',
         lastName: 'doe',
         email: 'user1@test.com',
@@ -94,7 +94,7 @@ describe('User', () => {
         role: Role.admin,
       });
       const user2 = new User({
-        id: 'user2',
+        id: 'user2_id',
         firstName: 'steve',
         lastName: 'artist',
         email: 'user1@test.com',
@@ -116,7 +116,7 @@ describe('User', () => {
         perPage: 10,
         data: [
           new User({
-            id: 'user1',
+            id: 'user1_id',
             firstName: 'john',
             lastName: 'doe',
             email: 'user1@test.com',
@@ -125,7 +125,7 @@ describe('User', () => {
             role: Role.admin,
           }),
           new User({
-            id: 'user2',
+            id: 'user2_id',
             firstName: 'steve',
             lastName: 'artist',
             email: 'user1@test.com',
@@ -149,7 +149,7 @@ describe('User', () => {
         perPage: 10,
         data: [
           new User({
-            id: 'user2',
+            id: 'user2_id',
             firstName: 'steve',
             lastName: 'artist',
             email: 'user1@test.com',
@@ -158,7 +158,7 @@ describe('User', () => {
             role: Role.editor,
           }),
           new User({
-            id: 'user1',
+            id: 'user1_id',
             firstName: 'john',
             lastName: 'doe',
             email: 'user1@test.com',
@@ -182,7 +182,7 @@ describe('User', () => {
         perPage: 10,
         data: [
           new User({
-            id: 'user1',
+            id: 'user1_id',
             firstName: 'john',
             lastName: 'doe',
             email: 'user1@test.com',
@@ -191,7 +191,7 @@ describe('User', () => {
             role: Role.admin,
           }),
           new User({
-            id: 'user2',
+            id: 'user2_id',
             firstName: 'steve',
             lastName: 'artist',
             email: 'user1@test.com',
@@ -207,7 +207,7 @@ describe('User', () => {
   describe('getUserById', () => {
     it('should return an user', async () => {
       const user1 = new User({
-        id: 'user1',
+        id: 'user1_id',
         firstName: 'john',
         lastName: 'doe',
         email: 'user1@test.com',
@@ -216,7 +216,7 @@ describe('User', () => {
         role: Role.admin,
       });
       const user2 = new User({
-        id: 'user2',
+        id: 'user2_id',
         firstName: 'steve',
         lastName: 'artist',
         email: 'user1@test.com',
@@ -230,7 +230,7 @@ describe('User', () => {
 
       expect(users).toEqual(
         new User({
-          id: 'user1',
+          id: 'user1_id',
           firstName: 'john',
           lastName: 'doe',
           email: 'user1@test.com',
@@ -243,7 +243,7 @@ describe('User', () => {
 
     it('should return an user', async () => {
       const user1 = new User({
-        id: 'user1',
+        id: 'user1_id',
         firstName: 'john',
         lastName: 'doe',
         email: 'user1@test.com',
@@ -252,7 +252,7 @@ describe('User', () => {
         role: Role.admin,
       });
       const user2 = new User({
-        id: 'user2',
+        id: 'user2_id',
         firstName: 'steve',
         lastName: 'artist',
         email: 'user1@test.com',
@@ -274,7 +274,7 @@ describe('User', () => {
       userRepository.seedUsers([]);
 
       const user1 = {
-        id: 'user1',
+        id: 'user1_id',
         firstName: 'john',
         lastName: 'doe',
         email: 'user1@test.com',
@@ -285,7 +285,7 @@ describe('User', () => {
       const user = await userCommands.createUser(reqUser, user1 as UserProps);
 
       expect(userToViewModel(user)).toEqual({
-        id: 'user1',
+        id: 'user1_id',
         firstName: 'john',
         lastName: 'doe',
         email: 'user1@test.com',
@@ -298,7 +298,7 @@ describe('User', () => {
       userRepository.seedUsers([]);
 
       const user1 = {
-        id: 'user1',
+        id: 'user1_id',
         firstName: 'jo',
         lastName: 'doe',
         email: 'user1@test.com',
@@ -318,7 +318,7 @@ describe('User', () => {
       userRepository.seedUsers([]);
 
       const user1 = {
-        id: 'user1',
+        id: 'user1_id',
         firstName: 'john',
         lastName: 'doe',
         email: 'user1@test.com',
@@ -338,7 +338,7 @@ describe('User', () => {
       userRepository.seedUsers([]);
 
       const user1 = {
-        id: 'user1',
+        id: 'user1_id',
         firstName: 'john',
         lastName: 'doe',
         email: 'user1@test',
@@ -358,7 +358,7 @@ describe('User', () => {
       userRepository.seedUsers([]);
 
       const user1 = {
-        id: 'user1',
+        id: 'user1_id',
         firstName: 'john',
         lastName: 'doe',
         email: 'user1@test',
@@ -378,7 +378,7 @@ describe('User', () => {
   describe('updateUser', () => {
     it('should return an user', async () => {
       const user1 = new User({
-        id: 'user1',
+        id: 'user1_id',
         firstName: 'john',
         lastName: 'doe',
         email: 'user1@test.com',
@@ -395,7 +395,7 @@ describe('User', () => {
       });
 
       expect(userToViewModel(user)).toEqual({
-        id: 'user1',
+        id: 'user1_id',
         firstName: 'john updated',
         lastName: 'doe updated',
         email: 'user1@test.com',
@@ -406,7 +406,7 @@ describe('User', () => {
 
     it('should return an error if the firstName length is less than 3 characters', async () => {
       const user1 = new User({
-        id: 'user1',
+        id: 'user1_id',
         firstName: 'john',
         lastName: 'doe',
         email: 'user1@test.com',
@@ -428,7 +428,7 @@ describe('User', () => {
 
     it('should return an error if the lastName length is less than 3 characters', async () => {
       const user1 = new User({
-        id: 'user1',
+        id: 'user1_id',
         firstName: 'john',
         lastName: 'doe',
         email: 'user1@test.com',
@@ -452,7 +452,7 @@ describe('User', () => {
   describe('removeUser', () => {
     it('should return the list without user2', async () => {
       const user1 = new User({
-        id: 'user1',
+        id: 'user1_id',
         firstName: 'john',
         lastName: 'doe',
         email: 'user1@test.com',
@@ -461,7 +461,7 @@ describe('User', () => {
         role: Role.admin,
       });
       const user2 = new User({
-        id: 'user2',
+        id: 'user2_id',
         firstName: 'steve',
         lastName: 'artist',
         email: 'user1@test.com',
@@ -475,7 +475,7 @@ describe('User', () => {
 
       expect(userRepository.users).toEqual([
         new User({
-          id: 'user1',
+          id: 'user1_id',
           firstName: 'john',
           lastName: 'doe',
           email: 'user1@test.com',
@@ -488,7 +488,7 @@ describe('User', () => {
 
     it('should return an error user not found', async () => {
       const user1 = new User({
-        id: 'user1',
+        id: 'user1_id',
         firstName: 'john',
         lastName: 'doe',
         email: 'user1@test.com',
@@ -497,7 +497,7 @@ describe('User', () => {
         role: Role.admin,
       });
       const user2 = new User({
-        id: 'user2',
+        id: 'user2_id',
         firstName: 'steve',
         lastName: 'artist',
         email: 'user1@test.com',
@@ -514,7 +514,7 @@ describe('User', () => {
 
       expect(userRepository.users).toEqual([
         new User({
-          id: 'user1',
+          id: 'user1_id',
           firstName: 'john',
           lastName: 'doe',
           email: 'user1@test.com',
@@ -523,7 +523,7 @@ describe('User', () => {
           role: Role.admin,
         }),
         new User({
-          id: 'user2',
+          id: 'user2_id',
           firstName: 'steve',
           lastName: 'artist',
           email: 'user1@test.com',
