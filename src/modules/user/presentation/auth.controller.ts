@@ -1,8 +1,17 @@
-import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Req,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common';
 import { Request } from 'express';
 
 import HttpExceptions from '@common/errors/HttpExceptions';
 import { AccessTokenGuard, RefreshTokenGuard } from '@common/guards';
+import { LoggingInterceptor } from '@common/interceptors/logging.interceptor';
 
 import AuthCommands, { Tokens } from '../application/auth.commands';
 import CreateUserDTO from './dto/CreateUser';
@@ -10,6 +19,7 @@ import { ReqUser, UserProps } from '../domain/model';
 import SignInDTO from './dto/SignIn';
 import { UserViewModel, userToViewModel } from './mapper/user.mapper';
 
+@UseInterceptors(LoggingInterceptor)
 @Controller('/auth')
 class AuthController {
   constructor(private readonly authCommands: AuthCommands) {}

@@ -9,6 +9,7 @@ import {
   Query,
   Req,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { Request } from 'express';
 
@@ -16,6 +17,7 @@ import { AccessTokenGuard } from '@common/guards';
 import HttpExceptions from '@common/errors/HttpExceptions';
 import { PaginationOptions, PaginationResponse } from '@common/types';
 import RolesGuard, { Roles } from '@common/guards/Role.guard';
+import { LoggingInterceptor } from '@common/interceptors/logging.interceptor';
 
 import UserQueries from '../application/user.queries';
 import { UserViewModel, userToViewModel } from './mapper/user.mapper';
@@ -26,6 +28,7 @@ import UpdateUserDTO from './dto/UpdateUser';
 
 @UseGuards(AccessTokenGuard, RolesGuard)
 @Roles(Role.admin, Role.editor)
+@UseInterceptors(LoggingInterceptor)
 @Controller('/users')
 class UserController {
   constructor(

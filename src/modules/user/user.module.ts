@@ -1,10 +1,8 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { JwtModule } from '@nestjs/jwt';
-import { APP_GUARD } from '@nestjs/core';
 
 import { AccessTokenStrategy, RefreshTokenStrategy } from '@common/guards';
-import RolesGuard from '@common/guards/Role.guard';
 
 import UserQueries from './application/user.queries';
 import UserCommands from './application/user.commands';
@@ -26,10 +24,6 @@ import AuthController from './presentation/auth.controller';
     },
     AccessTokenStrategy,
     RefreshTokenStrategy,
-    {
-      provide: APP_GUARD,
-      useClass: RolesGuard,
-    },
   ],
   controllers: [UserController, AuthController],
 })
