@@ -12,6 +12,7 @@ import UserRepository from './infrastructure/UserRepository';
 import UserController from './presentation/user.controller';
 import AuthController from './presentation/auth.controller';
 import UserHandlers from './presentation/aws/userHandlers';
+import AuthHandlers from './presentation/aws/authHandlers';
 
 @Module({
   imports: [TypeOrmModule.forFeature([UserEntity]), JwtModule.register({})],
@@ -20,6 +21,7 @@ import UserHandlers from './presentation/aws/userHandlers';
     UserCommands,
     AuthCommands,
     UserHandlers,
+    AuthHandlers,
     {
       provide: 'UserRepository',
       useClass: UserRepository,

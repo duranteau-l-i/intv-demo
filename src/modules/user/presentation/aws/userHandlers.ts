@@ -114,6 +114,12 @@ class UserHandlers {
   }
 
   private async authGuard(event: any) {
+    if (!event.headers?.Authorization)
+      throw new CustomError({
+        type: ErrorType.unauthorized,
+        message: UserError[ErrorType.unauthorized].unauthorized,
+      });
+
     const [, token] = event.headers.Authorization.split('Bearer ');
 
     return await this.jwtService

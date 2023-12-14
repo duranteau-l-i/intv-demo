@@ -1,15 +1,9 @@
 import { Callback, Context } from 'aws-lambda';
-import { getApp } from 'src/handler';
-import UserHandlers from './userHandlers';
 
-const handlersList = [
-  'getUsers',
-  'getMe',
-  'getUserById',
-  'createUser',
-  'updateUser',
-  'removeUser',
-];
+import { getApp } from 'src/handler';
+import AuthHandlers from './authHandlers';
+
+const handlersList = ['signUp', 'signIn', 'logOut', 'refreshTokens'];
 
 const list = handlersList.reduce(
   (acc, handler) => ({
@@ -17,7 +11,7 @@ const list = handlersList.reduce(
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     [handler]: async (event: any, context: Context, callback: Callback) => {
       const app = await getApp();
-      const userHandlers = app.get(UserHandlers);
+      const userHandlers = app.get(AuthHandlers);
 
       return await userHandlers[handler](event);
     },

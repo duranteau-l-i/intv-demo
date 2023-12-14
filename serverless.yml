@@ -9,6 +9,7 @@ provider:
 
 functions:
 
+  # # PROXY
   # main:
   #   handler: dist/handler.app
   #   events:
@@ -19,39 +20,72 @@ functions:
   #         method: ANY
   #         path: '{proxy+}'
 
+  # USER
   getUsers:
-    handler: dist/modules/user/presentation/aws/handlers.list.getUsers
+    handler: dist/modules/user/presentation/aws/handlersUser.list.getUsers
     events:
       - http:
           method: GET
           path: /users
   getMe:
-    handler: dist/modules/user/presentation/aws/handlers.list.getMe
+    handler: dist/modules/user/presentation/aws/handlersUser.list.getMe
     events:
       - http:
           method: GET
           path: /users/me
   getUserById:
-    handler: dist/modules/user/presentation/aws/handlers.list.getUserById
+    handler: dist/modules/user/presentation/aws/handlersUser.list.getUserById
     events:
       - http:
           method: GET
           path: /users/{id}
   createUser:
-    handler: dist/modules/user/presentation/aws/handlers.list.createUser
+    handler: dist/modules/user/presentation/aws/handlersUser.list.createUser
     events:
       - http:
           method: POST
           path: /users
   updateUser:
-    handler: dist/modules/user/presentation/aws/handlers.list.updateUser
+    handler: dist/modules/user/presentation/aws/handlersUser.list.updateUser
     events:
       - http:
           method: PATCH
           path: /users/{id}
   removeUser:
-    handler: dist/modules/user/presentation/aws/handlers.list.removeUser
+    handler: dist/modules/user/presentation/aws/handlersUser.list.removeUser
     events:
       - http:
           method: DELETE
           path: /users/{id}
+
+  # AUTH
+  signUp:
+    handler: dist/modules/user/presentation/aws/handlersAuth.list.signUp
+    events:
+      - http:
+          method: POST
+          path: /auth/signup
+  signIn:
+    handler: dist/modules/user/presentation/aws/handlersAuth.list.signIn
+    events:
+      - http:
+          method: POST
+          path: /auth/signin
+  logOut:
+    handler: dist/modules/user/presentation/aws/handlersAuth.list.logOut
+    events:
+      - http:
+          method: GET
+          path: /auth/logout
+  refreshTokens:
+    handler: dist/modules/user/presentation/aws/handlersAuth.list.refreshTokens
+    events:
+      - http:
+          method: GET
+          path: /auth/refresh-tokens
+
+
+
+
+
+
