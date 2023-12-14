@@ -16,6 +16,9 @@ const UserError = {
   [ErrorType.forbidden]: {
     accessDenied: 'Access denied',
   },
+  [ErrorType.unauthorized]: {
+    unauthorized: 'Unauthorized',
+  },
 };
 
 export default UserError;

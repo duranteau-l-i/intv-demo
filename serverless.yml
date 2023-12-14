@@ -8,12 +8,50 @@ provider:
   runtime: nodejs18.x
 
 functions:
-  main:
-    handler: dist/handler.app
+
+  # main:
+  #   handler: dist/handler.app
+  #   events:
+  #     - http:
+  #         method: ANY
+  #         path: /
+  #     - http:
+  #         method: ANY
+  #         path: '{proxy+}'
+
+  getUsers:
+    handler: dist/modules/user/presentation/aws/handlers.list.getUsers
     events:
       - http:
-          method: ANY
-          path: /
+          method: GET
+          path: /users
+  getMe:
+    handler: dist/modules/user/presentation/aws/handlers.list.getMe
+    events:
       - http:
-          method: ANY
-          path: '{proxy+}'
+          method: GET
+          path: /users/me
+  getUserById:
+    handler: dist/modules/user/presentation/aws/handlers.list.getUserById
+    events:
+      - http:
+          method: GET
+          path: /users/{id}
+  createUser:
+    handler: dist/modules/user/presentation/aws/handlers.list.createUser
+    events:
+      - http:
+          method: POST
+          path: /users
+  updateUser:
+    handler: dist/modules/user/presentation/aws/handlers.list.updateUser
+    events:
+      - http:
+          method: PATCH
+          path: /users/{id}
+  removeUser:
+    handler: dist/modules/user/presentation/aws/handlers.list.removeUser
+    events:
+      - http:
+          method: DELETE
+          path: /users/{id}
