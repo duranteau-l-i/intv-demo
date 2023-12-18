@@ -1,5 +1,7 @@
 service: serverless-intv-demo
 
+useDotenv: true
+
 plugins:
   - serverless-offline
 
@@ -9,7 +11,7 @@ provider:
 
 functions:
   main:
-    handler: dist/handler.app
+    handler: ${env:PROXY_HANDLER_PATH}
     events:
       - http:
           method: ANY
