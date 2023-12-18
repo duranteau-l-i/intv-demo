@@ -1,5 +1,7 @@
 service: serverless-intv-demo
 
+useDotenv: true
+
 plugins:
   - serverless-offline
 
@@ -11,7 +13,7 @@ functions:
 
   # # PROXY
   # main:
-  #   handler: dist/handler.app
+  #   handler: ${env:PROXY_HANDLER_PATH}
   #   events:
   #     - http:
   #         method: ANY
@@ -22,37 +24,37 @@ functions:
 
   # USER
   getUsers:
-    handler: dist/modules/user/presentation/aws/handlersUser.list.getUsers
+    handler: ${env:HANDLER_PATH}.handlersUser.getUsers
     events:
       - http:
           method: GET
           path: /users
   getMe:
-    handler: dist/modules/user/presentation/aws/handlersUser.list.getMe
+    handler: ${env:HANDLER_PATH}.handlersUser.getMe
     events:
       - http:
           method: GET
           path: /users/me
   getUserById:
-    handler: dist/modules/user/presentation/aws/handlersUser.list.getUserById
+    handler: ${env:HANDLER_PATH}.handlersUser.getUserById
     events:
       - http:
           method: GET
           path: /users/{id}
   createUser:
-    handler: dist/modules/user/presentation/aws/handlersUser.list.createUser
+    handler: ${env:HANDLER_PATH}.handlersUser.createUser
     events:
       - http:
           method: POST
           path: /users
   updateUser:
-    handler: dist/modules/user/presentation/aws/handlersUser.list.updateUser
+    handler: ${env:HANDLER_PATH}.handlersUser.updateUser
     events:
       - http:
           method: PATCH
           path: /users/{id}
   removeUser:
-    handler: dist/modules/user/presentation/aws/handlersUser.list.removeUser
+    handler: ${env:HANDLER_PATH}.handlersUser.removeUser
     events:
       - http:
           method: DELETE
@@ -60,25 +62,25 @@ functions:
 
   # AUTH
   signUp:
-    handler: dist/modules/user/presentation/aws/handlersAuth.list.signUp
+    handler: ${env:HANDLER_PATH}.handlersAuth.signUp
     events:
       - http:
           method: POST
           path: /auth/signup
   signIn:
-    handler: dist/modules/user/presentation/aws/handlersAuth.list.signIn
+    handler: ${env:HANDLER_PATH}.handlersAuth.signIn
     events:
       - http:
           method: POST
           path: /auth/signin
   logOut:
-    handler: dist/modules/user/presentation/aws/handlersAuth.list.logOut
+    handler: ${env:HANDLER_PATH}.handlersAuth.logOut
     events:
       - http:
           method: GET
           path: /auth/logout
   refreshTokens:
-    handler: dist/modules/user/presentation/aws/handlersAuth.list.refreshTokens
+    handler: ${env:HANDLER_PATH}.handlersAuth.refreshTokens
     events:
       - http:
           method: GET

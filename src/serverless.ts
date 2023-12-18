@@ -10,7 +10,7 @@ import { AppModule } from './app.module';
 
 // let serverlessApp: Handler;
 
-// export const app = async (event: any, context: Context, callback: Callback) => {
+// export const handler = async (event: any, context: Context, callback: Callback) => {
 //   if (!serverlessApp) {
 //     const app = await NestFactory.create(AppModule);
 //     app.useGlobalPipes(new ValidationPipe());

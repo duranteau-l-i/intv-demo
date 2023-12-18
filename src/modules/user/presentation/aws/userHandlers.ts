@@ -1,15 +1,14 @@
 import { Injectable } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 
 import HttpExceptions from '@common/errors/HttpExceptions';
+import CustomError, { ErrorType } from '@common/errors/CustomError';
 
 import UserQueries from '../../application/user.queries';
 import { userToViewModel } from '../mapper/user.mapper';
 import UserCommands from '../../application/user.commands';
 
 import { ReqUser, UserProps } from '../../domain/model';
-
-import { JwtService } from '@nestjs/jwt';
-import CustomError, { ErrorType } from '@common/errors/CustomError';
 import UserError from '../../domain/error';
 
 @Injectable()

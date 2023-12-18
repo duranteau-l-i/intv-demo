@@ -22,8 +22,7 @@ export class LoggingInterceptor implements NestInterceptor {
     this.logger.log(
       `Request: ${method} ${url}, ip: ${ip} - ${context.getClass().name} ${
         context.getHandler().name
-      } ${userId}
-      }`,
+      } ${userId}\n`,
     );
 
     const now = Date.now();
@@ -35,12 +34,12 @@ export class LoggingInterceptor implements NestInterceptor {
         this.logger.log(
           `Response: ${method} ${url} - statusCode: ${statusCode}, time: ${
             Date.now() - now
-          }ms \n`,
+          }ms\n`,
         );
       }),
       catchError((error) => {
         this.logger.error(
-          `Response: ${method} ${url} - statusCode: ${error.status} - Message: ${error.message}`,
+          `Response: ${method} ${url} - statusCode: ${error.status} - Message: ${error.message}\n`,
         );
 
         return throwError(() => error);

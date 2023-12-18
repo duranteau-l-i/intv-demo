@@ -14,6 +14,8 @@ import AuthController from './presentation/auth.controller';
 import UserHandlers from './presentation/aws/userHandlers';
 import AuthHandlers from './presentation/aws/authHandlers';
 
+import './presentation/aws/handlers';
+
 @Module({
   imports: [TypeOrmModule.forFeature([UserEntity]), JwtModule.register({})],
   providers: [

@@ -9,7 +9,7 @@ import UserEntity from './modules/user/infrastructure/entities/User.entity';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: ['.env.dev.local'],
+      envFilePath: ['.env'],
     }),
     TypeOrmModule.forRoot({
       type: 'postgres',
