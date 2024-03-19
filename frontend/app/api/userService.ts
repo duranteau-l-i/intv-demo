@@ -3,11 +3,15 @@
 import axiosInstance from "./axios";
 import { redirect } from "next/navigation";
 import { getAccessToken } from "./token";
-import { User } from "@/entities/user";
+import { Role, User } from "@/entities/user";
+import { jwtDecode } from "jwt-decode";
 
 export const getUsers = async (): Promise<User[]> => {
   try {
     const accessToken = getAccessToken();
+    const data: any = jwtDecode(accessToken as string);
+
+    if (data.role === Role.user) return [];
 
     const result = await axiosInstance.get("/users", {
       headers: {

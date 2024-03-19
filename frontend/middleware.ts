@@ -8,6 +8,7 @@ export function middleware(request: NextRequest) {
   if (
     (!accessToken || isExpired(accessToken)) &&
     !request.nextUrl.pathname.startsWith("/login") &&
+    !request.nextUrl.pathname.startsWith("/signup") &&
     request.nextUrl.pathname !== "/"
   ) {
     request.cookies.set("access-token", "");

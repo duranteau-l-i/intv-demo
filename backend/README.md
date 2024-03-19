@@ -47,3 +47,7 @@ $ npm run test:integration
 $ docker-compose up -d
 $ npm run test:e2e
 ```
+
+## Access has all the features
+
+You need to create a new user and change its role to admin in the database.

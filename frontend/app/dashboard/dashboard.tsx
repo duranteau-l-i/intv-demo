@@ -58,8 +58,6 @@ export default function Dashboard(props: any) {
   const [id, setId] = useState("");
 
   const handleDelete = () => {
-    console.log(id);
-
     setDeleteLoading(true);
 
     deleteUser(id)
@@ -80,7 +78,9 @@ export default function Dashboard(props: any) {
       return <Loading />;
     }
     if (isError || deleteError) {
-      return <div className="">Error: {error?.message || deleteError}</div>;
+      return (
+        <div className="text-red-500">{error?.message || deleteError}</div>
+      );
     }
     if (isSuccess) {
       return (
@@ -146,9 +146,14 @@ export default function Dashboard(props: any) {
 
   return (
     <>
-      <div className="">{renderResult()}</div>
-
-      {role === Role.admin && <UserForm refetch={refetch} />}
+      {role !== Role.user ? (
+        <>
+          <div className="">{renderResult()}</div>
+          {role === Role.admin && <UserForm refetch={refetch} />}{" "}
+        </>
+      ) : (
+        <div>The dashboard is only accessible to admins and editors</div>
+      )}
     </>
   );
 }

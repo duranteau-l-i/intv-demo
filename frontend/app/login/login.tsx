@@ -7,6 +7,7 @@ import { useState } from "react";
 
 import { login } from "@/app/api/authService";
 import Loading from "@/components/loading";
+import { Link } from "@nextui-org/link";
 
 export default function Login() {
   const router = useRouter();
@@ -23,7 +24,7 @@ export default function Login() {
     login({ username, password })
       .then(res => {
         localStorage.setItem("access-token", res.accessToken);
-        router.push("/dashboard");
+        router.push("/");
       })
       .catch(err => {
         setError(err.message);
@@ -61,13 +62,21 @@ export default function Login() {
             />
           </div>
           <Button
-            className="text-sm font-normal text-default-600"
+            className="text-sm font-normal"
             onClick={handleSubmit}
             isDisabled={!username || !password}
             color="primary"
+            radius="full"
+            variant="shadow"
           >
             Submit
           </Button>
+
+          <div>
+            <Link color={"foreground"} href="/signup">
+              Signup
+            </Link>
+          </div>
         </>
       )}
     </div>

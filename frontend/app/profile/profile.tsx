@@ -91,8 +91,10 @@ export default function Profile(props: any) {
           </div>
 
           <Button
-            className="text-sm font-normal text-default-600"
+            className="text-sm font-normal"
             color="primary"
+            radius="full"
+            variant="shadow"
             onClick={handleUpdate}
             isDisabled={!firstName || !lastName || updateLoading}
           >
@@ -100,9 +102,11 @@ export default function Profile(props: any) {
           </Button>
 
           <Button
-            className="text-sm font-normal text-default-600"
+            className="text-sm font-normal"
             onClick={handleLogout}
             color="danger"
+            radius="full"
+            variant="shadow"
           >
             logout
           </Button>

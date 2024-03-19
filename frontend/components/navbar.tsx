@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Navbar as NextUINavbar,
   NavbarContent,
@@ -9,7 +11,7 @@ import {
 } from "@nextui-org/navbar";
 import { Button } from "@nextui-org/button";
 import { Link } from "@nextui-org/link";
-
+import { useEffect, useState } from "react";
 import { link as linkStyles } from "@nextui-org/theme";
 
 import { siteConfig } from "@/config/site";
@@ -19,6 +21,9 @@ import clsx from "clsx";
 import { ThemeSwitch } from "@/components/theme-switch";
 
 import { Logo } from "@/components/icons";
+import { jwtDecode } from "jwt-decode";
+import { isExpired } from "@/utils/token";
+import { Role } from "@/entities/user";
 
 export const Navbar = () => {
   return (
@@ -76,7 +81,7 @@ export const Navbar = () => {
         <div className="mx-4 mt-2 flex flex-col gap-2">
           {siteConfig.navMenuItems.map((item, index) => (
             <NavbarMenuItem key={`${item}-${index}`}>
-              <Link color={"foreground"} href="#" size="lg">
+              <Link color={"foreground"} href={item.href} size="lg">
                 {item.label}
               </Link>
             </NavbarMenuItem>
