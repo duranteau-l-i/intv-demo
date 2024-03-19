@@ -1,9 +1,8 @@
-import { title } from "@/components/primitives";
+import { getUsers } from "@/app/api/userService";
+import Dashboard from "./dashboard";
 
-export default function DashboardPage() {
-  return (
-    <div>
-      <h1 className={title()}>Dashboard</h1>
-    </div>
-  );
+export default async function DashboardPage() {
+  const initialState = await getUsers();
+
+  return <Dashboard initialState={initialState} />;
 }

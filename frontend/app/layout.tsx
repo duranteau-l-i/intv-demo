@@ -55,18 +55,12 @@ export default function RootLayout({
                 href="https://github.com/duranteau-l-i/intv-demo"
                 title="intv-demo github"
               >
-                <p>
-                  <Link
-                    isExternal
-                    href={siteConfig.links.github}
-                    aria-label="Github"
-                  >
-                    <span>
-                      <GithubIcon className="text-default-500" />
-                    </span>
-                    <code className="text-default-600">intv-demo</code>
-                  </Link>
-                </p>
+                <div className="flex">
+                  <span className="mr-1">
+                    <GithubIcon className="text-default-500" />
+                  </span>
+                  <code className="text-default-600">intv-demo</code>
+                </div>
               </Link>
             </footer>
           </div>
