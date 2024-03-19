@@ -47,6 +47,50 @@ export const addUser = async (
   }
 };
 
+export const updateUser = async (data: {
+  id: string;
+  firstName: string;
+  lastName: string;
+}): Promise<User> => {
+  try {
+    const accessToken = getAccessToken();
+
+    const result = await axiosInstance.patch(`/users/${data.id}`, data, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      }
+    });
+
+    return result.data.data;
+  } catch (err: any) {
+    if (err.response.data.statusCode === 401) {
+      redirect("/login");
+    }
+
+    throw new Error(err.response.data.message);
+  }
+};
+
+export const deleteUser = async (id: string): Promise<User> => {
+  try {
+    const accessToken = getAccessToken();
+
+    const result = await axiosInstance.delete(`/users/${id}`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      }
+    });
+
+    return result.data.data;
+  } catch (err: any) {
+    if (err.response.data.statusCode === 401) {
+      redirect("/login");
+    }
+
+    throw new Error(err.response.data.message);
+  }
+};
+
 export const getMe = async (): Promise<User> => {
   try {
     const accessToken = getAccessToken();

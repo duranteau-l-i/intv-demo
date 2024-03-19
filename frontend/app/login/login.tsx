@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 import { login } from "@/app/api/authService";
+import Loading from "@/components/loading";
 
 export default function Login() {
   const router = useRouter();
@@ -32,10 +33,10 @@ export default function Login() {
 
   return (
     <div className="w-full flex flex-col gap-4 ">
-      {error && <div className="mt-5">Error: {error}</div>}
+      {error && <div className="mt-5 text-red-500">{error}</div>}
 
       {loading ? (
-        <div className="mt-5">Loading...</div>
+        <Loading />
       ) : (
         <>
           <div className="mt-10 flex w-full flex-wrap md:flex-nowrap mb-6 md:mb-0 gap-4">
@@ -60,7 +61,7 @@ export default function Login() {
             />
           </div>
           <Button
-            className="text-sm font-normal text-default-600 bg-default-100"
+            className="text-sm font-normal text-default-600"
             onClick={handleSubmit}
             isDisabled={!username || !password}
             color="primary"

@@ -67,7 +67,7 @@ class AuthCommands {
     }) => {
       const accessToken = await jwtService.signAsync(data, {
         secret: process.env.JWT_ACCESS_SECRET,
-        expiresIn: '15m',
+        expiresIn: '30m',
       });
       const refreshToken = await jwtService.signAsync(data, {
         secret: process.env.JWT_REFRESH_SECRET,

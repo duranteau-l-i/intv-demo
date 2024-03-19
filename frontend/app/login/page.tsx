@@ -3,8 +3,10 @@ import Login from "./login";
 
 export default function LoginPage() {
   return (
-    <div>
-      <h1 className={title()}>Login</h1>
+    <div className="w-full">
+      <div className="mb-10">
+        <h1 className={title()}>Login</h1>
+      </div>
       <Login />
     </div>
   );

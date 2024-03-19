@@ -6,8 +6,10 @@ export default async function ProfilePage() {
   const initialState = await getMe();
 
   return (
-    <div>
-      <h1 className={title()}>Profile</h1>
+    <div className="w-full">
+      <div className="mb-10">
+        <h1 className={title()}>Profile</h1>
+      </div>
       <Profile initialState={initialState} />
     </div>
   );
