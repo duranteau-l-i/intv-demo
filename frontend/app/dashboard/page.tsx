@@ -1,6 +1,6 @@
 import { getUsers } from "@/app/api/userService";
-import Dashboard from "./dashboard";
 import { title } from "@/components/primitives";
+import Dashboard from "./dashboard";
 
 export default async function DashboardPage() {
   const initialState = await getUsers();

@@ -1,5 +1,3 @@
-"use client";
-
 import {
   Navbar as NextUINavbar,
   NavbarContent,
@@ -11,7 +9,6 @@ import {
 } from "@nextui-org/navbar";
 import { Button } from "@nextui-org/button";
 import { Link } from "@nextui-org/link";
-import { useEffect, useState } from "react";
 import { link as linkStyles } from "@nextui-org/theme";
 
 import { siteConfig } from "@/config/site";
@@ -21,9 +18,6 @@ import clsx from "clsx";
 import { ThemeSwitch } from "@/components/theme-switch";
 
 import { Logo } from "@/components/icons";
-import { jwtDecode } from "jwt-decode";
-import { isExpired } from "@/utils/token";
-import { Role } from "@/entities/user";
 
 export const Navbar = () => {
   return (

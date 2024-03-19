@@ -5,7 +5,7 @@ import { Input } from "@nextui-org/input";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-import { login, signup } from "@/app/api/authService";
+import { signup } from "@/app/api/authService";
 import Loading from "@/components/loading";
 
 const defaultUser = {

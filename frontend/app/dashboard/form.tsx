@@ -134,8 +134,10 @@ const UserForm = (props: any) => {
           </div>
 
           <Button
-            className="text-sm font-normal text-default-600"
+            className="text-sm font-normal"
             color="primary"
+            radius="full"
+            variant="shadow"
             onClick={handleSubmit}
             isDisabled={
               !user.firstName ||

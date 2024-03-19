@@ -1,14 +1,14 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { useQuery } from "react-query";
-import { getMe, updateUser } from "../api/userService";
-import { User } from "@/entities/user";
 import { Button } from "@nextui-org/button";
+import { Input } from "@nextui-org/input";
 import { useRouter } from "next/navigation";
 
 import { logout } from "../api/authService";
-import { Input } from "@nextui-org/input";
-import { useEffect, useState } from "react";
+import { getMe, updateUser } from "../api/userService";
+import { User } from "@/entities/user";
 import Loading from "@/components/loading";
 
 export default function Profile(props: any) {
