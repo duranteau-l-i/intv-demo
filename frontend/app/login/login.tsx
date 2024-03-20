@@ -1,40 +1,26 @@
 "use client";
 
-import { Button } from "@nextui-org/button";
-import { Input } from "@nextui-org/input";
-import { useRouter } from "next/navigation";
+import { Input, Button } from "@nextui-org/react";
+
 import { useState } from "react";
 
-import { login } from "@/app/api/authService";
 import Loading from "@/components/loading";
 import { Link } from "@nextui-org/link";
+import useLogin from "./hooks/useLogin";
 
 export default function Login() {
-  const router = useRouter();
-
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-
-  const handleSubmit = () => {
-    setLoading(true);
-
-    login({ username, password })
-      .then(res => {
-        localStorage.setItem("access-token", res.accessToken);
-        router.push("/");
-      })
-      .catch(err => {
-        setError(err.message);
-      })
-      .finally(() => setLoading(false));
-  };
+  const { submit, loading, error, setError } = useLogin();
 
   return (
     <div className="w-full flex flex-col gap-4 ">
-      {error && <div className="mt-5 text-red-500">{error}</div>}
+      {error && (
+        <div role="error-message" className="mt-5 text-red-500">
+          {error}
+        </div>
+      )}
 
       {loading ? (
         <Loading />
@@ -63,7 +49,7 @@ export default function Login() {
           </div>
           <Button
             className="text-sm font-normal"
-            onClick={handleSubmit}
+            onClick={() => submit(username, password)}
             isDisabled={!username || !password}
             color="primary"
             radius="full"

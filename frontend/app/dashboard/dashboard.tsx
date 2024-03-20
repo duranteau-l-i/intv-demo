@@ -92,6 +92,7 @@ export default function Dashboard(props: any) {
               <TableColumn className="text-center">FIRST NAME</TableColumn>
               <TableColumn className="text-center">LAST NAME</TableColumn>
               <TableColumn className="text-center">USERNAME</TableColumn>
+              <TableColumn className="text-center">EMAIL</TableColumn>
               <TableColumn className="text-center">ROLE</TableColumn>
               <TableColumn className="text-center">DELETE</TableColumn>
             </TableHeader>
@@ -101,6 +102,7 @@ export default function Dashboard(props: any) {
                   <TableCell>{item.firstName}</TableCell>
                   <TableCell>{item.lastName}</TableCell>
                   <TableCell>{item.username}</TableCell>
+                  <TableCell>{item.email}</TableCell>
                   <TableCell>{item.role}</TableCell>
                   <TableCell>
                     <Button
