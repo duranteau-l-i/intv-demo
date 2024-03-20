@@ -40,6 +40,7 @@ export default function Dashboard(props: any) {
   });
 
   const [role, setRole] = useState<Role>(Role.user);
+  const [currentUserId, setCurrentUserId] = useState<string>("");
 
   useEffect(() => {
     const accessToken = localStorage.getItem("access-token");
@@ -50,6 +51,7 @@ export default function Dashboard(props: any) {
     } else {
       const data: any = jwtDecode(accessToken as string);
       setRole(data.role);
+      setCurrentUserId(data.sub);
     }
   }, []);
 
@@ -93,7 +95,7 @@ export default function Dashboard(props: any) {
               <TableColumn className="text-center">ROLE</TableColumn>
               <TableColumn className="text-center">DELETE</TableColumn>
             </TableHeader>
-            <TableBody items={data}>
+            <TableBody items={data.filter(el => el.id !== currentUserId)}>
               {(item: User) => (
                 <TableRow key={item.id}>
                   <TableCell>{item.firstName}</TableCell>
