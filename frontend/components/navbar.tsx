@@ -7,12 +7,11 @@ import {
   NavbarItem,
   NavbarMenuItem
 } from "@nextui-org/navbar";
-import { Button } from "@nextui-org/button";
 import { Link } from "@nextui-org/link";
 import { link as linkStyles } from "@nextui-org/theme";
+import NextLink from "next/link";
 
 import { siteConfig } from "@/config/site";
-import NextLink from "next/link";
 import clsx from "clsx";
 
 import { ThemeSwitch } from "@/components/theme-switch";
@@ -52,17 +51,6 @@ export const Navbar = () => {
       >
         <NavbarItem className="hidden sm:flex gap-2">
           <ThemeSwitch />
-        </NavbarItem>
-        <NavbarItem className="hidden md:flex">
-          <Button
-            as={Link}
-            className="text-sm font-normal text-default-600 bg-default-100"
-            href="/login"
-            startContent="Login"
-            variant="flat"
-          >
-            Login
-          </Button>
         </NavbarItem>
       </NavbarContent>
 
