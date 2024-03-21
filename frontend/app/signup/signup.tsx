@@ -1,12 +1,11 @@
 "use client";
 
+import { useState } from "react";
 import { Button } from "@nextui-org/button";
 import { Input } from "@nextui-org/input";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
 
-import { signup } from "@/app/api/authService";
 import Loading from "@/components/loading";
+import useSignup from "./hooks/useSignup";
 
 const defaultUser = {
   firstName: "",
@@ -17,33 +16,21 @@ const defaultUser = {
 };
 
 export default function Signup() {
-  const router = useRouter();
+  const { loading, error, setError, handleSubmit } = useSignup();
 
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
   const [user, setUser] = useState(defaultUser);
 
   const handleChange = (data: { name: string; value: string }) => {
     setUser({ ...user, [data.name]: data.value });
   };
 
-  const handleSubmit = () => {
-    setLoading(true);
-
-    signup(user)
-      .then(res => {
-        localStorage.setItem("access-token", res.accessToken);
-        router.push("/");
-      })
-      .catch(err => {
-        setError(err.message);
-      })
-      .finally(() => setLoading(false));
-  };
-
   return (
     <div className="w-full flex flex-col gap-4 ">
-      {error && <div className="mt-5 text-red-500">{error}</div>}
+      {error && (
+        <div role="error-message" className="mt-5 text-red-500">
+          {error}
+        </div>
+      )}
 
       {loading ? (
         <Loading />
@@ -113,7 +100,7 @@ export default function Signup() {
             color="primary"
             radius="full"
             variant="shadow"
-            onClick={handleSubmit}
+            onClick={() => handleSubmit(user)}
             isDisabled={
               !user.firstName ||
               !user.lastName ||

@@ -7,9 +7,11 @@ jest.mock("next/navigation", () => ({
   useRouter: jest.fn().mockReturnValue({ router: () => "" })
 }));
 
+const submit = jest.fn((username: string, password: string) => {});
+
 jest.mock("../hooks/useLogin", () =>
   jest.fn(() => ({
-    submit: function (username: string, password: string) {},
+    submit,
     loading: false,
     error: "The username or password is wrong",
     setError: (value: string) => {}
@@ -40,6 +42,8 @@ describe("LoginPage", () => {
     const button = screen.getByText("Submit");
 
     await user.click(button);
+
+    expect(submit).toHaveBeenCalled();
 
     const errorMessage = screen.getByRole("error-message");
     expect(errorMessage).toBeInTheDocument();

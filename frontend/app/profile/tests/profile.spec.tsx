@@ -20,9 +20,11 @@ jest.mock("react-query", () => ({
   })
 }));
 
+const update = jest.fn((firstName: string, lastName: string) => {});
+
 jest.mock("../hooks/useUpdate", () =>
   jest.fn(() => ({
-    update: function (firstName: string, lastName: string) {},
+    update,
     updateLoading: false,
     updateError: "firstName must be longer than or equal to 3 characters",
     setUpdateError: (value: string) => {}
@@ -66,6 +68,8 @@ describe("ProfilePage", () => {
     const button = screen.getByText("Update");
 
     await user.click(button);
+
+    expect(update).toHaveBeenCalled();
 
     const errorMessage = screen.getByRole("error-message");
     expect(errorMessage).toBeInTheDocument();
