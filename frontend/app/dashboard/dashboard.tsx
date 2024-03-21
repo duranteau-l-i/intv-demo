@@ -18,17 +18,16 @@ import {
   ModalFooter
 } from "@nextui-org/react";
 import { Role, User } from "@/entities/user";
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useState } from "react";
 
-import { isExpired } from "@/utils/token";
-import { deleteUser, getUsers } from "@/app/api/userService";
+import { getUsers } from "@/app/api/userService";
 
 import UserForm from "./form";
 import Loading from "@/components/loading";
+import useDeleteUser from "./hooks/useDeleteUser";
+import useCurrentUser from "./hooks/useCurrentUser";
 
 export default function Dashboard(props: any) {
-  const router = useRouter();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const { data, error, isLoading, isError, isSuccess, refetch } = useQuery<
@@ -39,41 +38,14 @@ export default function Dashboard(props: any) {
     queryFn: () => getUsers()
   });
 
-  const [role, setRole] = useState<Role>(Role.user);
-  const [currentUserId, setCurrentUserId] = useState<string>("");
+  const { role, currentUserId } = useCurrentUser();
 
-  useEffect(() => {
-    const accessToken = localStorage.getItem("access-token");
-
-    if (!accessToken || isExpired(accessToken)) {
-      localStorage.removeItem("access-token");
-      router.push("/login");
-    } else {
-      const data: any = jwtDecode(accessToken as string);
-      setRole(data.role);
-      setCurrentUserId(data.sub);
-    }
-  }, []);
-
-  const [deleteLoading, setDeleteLoading] = useState(false);
-  const [deleteError, setDeleteError] = useState("");
   const [id, setId] = useState("");
 
-  const handleDelete = () => {
-    setDeleteLoading(true);
-
-    deleteUser(id)
-      .then(res => {
-        refetch();
-      })
-      .catch(err => {
-        setDeleteError(err.message);
-      })
-      .finally(() => {
-        onClose();
-        setDeleteLoading(false);
-      });
-  };
+  const { handleDelete, deleteLoading, deleteError } = useDeleteUser({
+    refetch,
+    onClose
+  });
 
   const renderResult = () => {
     if (isLoading || deleteLoading) {
@@ -87,7 +59,7 @@ export default function Dashboard(props: any) {
     if (isSuccess) {
       return (
         <>
-          <Table aria-label="users table" className="">
+          <Table aria-label="users-table" className="">
             <TableHeader>
               <TableColumn className="text-center">FIRST NAME</TableColumn>
               <TableColumn className="text-center">LAST NAME</TableColumn>
@@ -134,7 +106,7 @@ export default function Dashboard(props: any) {
                     <Button color="primary" variant="light" onPress={onClose}>
                       Close
                     </Button>
-                    <Button color="danger" onPress={handleDelete}>
+                    <Button color="danger" onPress={() => handleDelete(id)}>
                       Delete
                     </Button>
                   </ModalFooter>

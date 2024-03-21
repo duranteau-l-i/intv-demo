@@ -4,10 +4,10 @@ import { Input } from "@nextui-org/input";
 import { Select, SelectItem } from "@nextui-org/react";
 import { useState } from "react";
 
-import { addUser } from "../api/userService";
 import Loading from "@/components/loading";
+import useAddUser, { UserWithoutId } from "./hooks/useAddUser";
 
-const defaultUser = {
+export const defaultUser = {
   firstName: "",
   lastName: "",
   username: "",
@@ -17,33 +17,26 @@ const defaultUser = {
 };
 
 const UserForm = (props: any) => {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [user, setUser] = useState(defaultUser);
+  const [user, setUser] = useState<UserWithoutId>(defaultUser);
 
   const handleChange = (data: { name: string; value: string }) => {
     setUser({ ...user, [data.name]: data.value });
   };
 
-  const handleSubmit = () => {
-    setLoading(true);
-
-    addUser(user)
-      .then(res => {
-        setUser(defaultUser);
-        props.refetch();
-      })
-      .catch(err => {
-        setError(err.message);
-      })
-      .finally(() => setLoading(false));
-  };
+  const { handleSubmit, loading, error, setError } = useAddUser({
+    refetch: props.refetch,
+    setUser
+  });
 
   return (
     <div className="w-full flex flex-col gap-4 mt-10 mb-10">
       <h2 className="">Add new user</h2>
 
-      {error && <div className="text-red-500">{error}</div>}
+      {error && (
+        <div role="error-message" className="text-red-500">
+          {error}
+        </div>
+      )}
 
       {loading ? (
         <Loading />
@@ -138,7 +131,7 @@ const UserForm = (props: any) => {
             color="primary"
             radius="full"
             variant="shadow"
-            onClick={handleSubmit}
+            onClick={() => handleSubmit(user)}
             isDisabled={
               !user.firstName ||
               !user.lastName ||
