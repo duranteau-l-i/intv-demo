@@ -35,3 +35,12 @@ npm run build
 ```bash
 npm start
 ```
+
+## Test
+
+```bash
+$ npm run test
+
+# watch mode
+$ npm run test:watch
+```

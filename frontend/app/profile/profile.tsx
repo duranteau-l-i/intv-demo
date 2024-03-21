@@ -4,16 +4,14 @@ import { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { Button } from "@nextui-org/button";
 import { Input } from "@nextui-org/input";
-import { useRouter } from "next/navigation";
 
-import { logout } from "../api/authService";
-import { getMe, updateUser } from "../api/userService";
+import { getMe } from "../api/userService";
 import { User } from "@/entities/user";
 import Loading from "@/components/loading";
+import useUpdate from "./hooks/useUpdate";
+import useLogout from "./hooks/useLogout";
 
 export default function Profile(props: any) {
-  const router = useRouter();
-
   const { data, error, isLoading, isError, isSuccess } = useQuery<User, Error>({
     queryKey: ["me"],
     queryFn: () => getMe()
@@ -29,38 +27,29 @@ export default function Profile(props: any) {
     }
   }, [data]);
 
-  const [updateLoading, setUpdateLoading] = useState(false);
-  const [updateError, setUpdateError] = useState("");
+  const { update, updateLoading, updateError, setUpdateError } = useUpdate();
 
-  const handleUpdate = () => {
-    setUpdateLoading(true);
-
-    updateUser({ id: data?.id ?? "", firstName, lastName })
-      .then(res => {})
-      .catch(err => {
-        setUpdateError(err.message);
-      })
-      .finally(() => setUpdateLoading(false));
-  };
-
-  const handleLogout = () => {
-    logout().then(res => {
-      localStorage.removeItem("access-token");
-      router.push("/");
-    });
-  };
+  const { handleLogout } = useLogout();
 
   const renderResult = () => {
     if (isLoading || updateLoading) {
       return <Loading />;
     }
-    if (isError || updateError) {
-      return <div className="">{error?.message || updateError}</div>;
+    if (isError) {
+      return (
+        <div role="error-message" className="mt-5 text-red-500">
+          {error?.message}
+        </div>
+      );
     }
     if (isSuccess) {
       return (
         <>
-          {error && <div className="mt-5 text-red-500">{error}</div>}
+          {updateError && (
+            <div role="error-message" className="mt-5 text-red-500">
+              {updateError}
+            </div>
+          )}
 
           <div className="flex w-full flex-wrap md:flex-nowrap mb-6 md:mb-0 gap-4">
             <Input
@@ -83,11 +72,11 @@ export default function Profile(props: any) {
             />
           </div>
           <div className="flex w-full flex-wrap md:flex-nowrap mb-6 md:mb-0 gap-4">
-            <Input isDisabled label="Email" value={data.email} type="email" />
+            <Input isDisabled label="Email" value={data?.email} type="email" />
           </div>
           <div className="flex w-full flex-wrap md:flex-nowrap mb-6 md:mb-0 gap-4">
-            <Input isDisabled label="Username" value={data.username} />
-            <Input isDisabled label="Role" value={data.role} />
+            <Input isDisabled label="Username" value={data?.username} />
+            <Input isDisabled label="Role" value={data?.role} />
           </div>
 
           <Button
@@ -95,7 +84,7 @@ export default function Profile(props: any) {
             color="primary"
             radius="full"
             variant="shadow"
-            onClick={handleUpdate}
+            onClick={() => update({ id: data?.id ?? "", firstName, lastName })}
             isDisabled={!firstName || !lastName || updateLoading}
           >
             Update
