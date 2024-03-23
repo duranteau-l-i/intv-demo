@@ -48,8 +48,8 @@ $ docker-compose up -d
 $ npm run test:e2e
 ```
 
-## Add default admin user (access has all the features)
+## Add default users (admin has all the features)
 
 ```bash
-$ npm run create:admin
+$ npm run create:users
 ```

@@ -8,8 +8,7 @@ There is no end to it, as it will evolve according to my inspirations and what I
 
 ## Technologies Used
 
-- [Node.js](http://nodejs.org)\
-- Framework: [Nest](https://github.com/nestjs/nest)
+- [Node.js](http://nodejs.org) | Framework: [Nest](https://github.com/nestjs/nest)
 
 - [Next.js 13](https://nextjs.org/docs/getting-started)
 - [NextUI v2](https://nextui.org/)

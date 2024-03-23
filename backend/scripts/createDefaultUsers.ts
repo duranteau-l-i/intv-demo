@@ -31,8 +31,21 @@ const insertDefaultAdmin = async () => {
     role: 'admin',
   });
 
-  console.log(`Username: admin`);
-  console.log(`Password: Admin@123`);
+  console.log(`Username: admin | Password: Admin@123 \n`);
+
+  const passwordUserHashed = await argon2.hash('User@123');
+
+  await source.getRepository(UserEntity).save({
+    id: 'c04b4496-2a70-4c26-8962-adcca4f4594e',
+    firstName: 'jane',
+    lastName: 'doe',
+    email: 'user@test.com',
+    username: 'user',
+    password: passwordUserHashed,
+    role: 'user',
+  });
+
+  console.log(`Username: user | Password: User@123 \n`);
 
   process.exit(1);
 };

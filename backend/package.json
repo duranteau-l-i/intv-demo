@@ -24,7 +24,7 @@
     "test:unit:watch": "jest --testRegex=.spec.ts --watch",
     "test:integration": "jest --testRegex=.test.ts",
     "test:e2e": "jest --testRegex=.e2e.ts",
-    "create:admin": "ts-node ./scripts/createDefaultAdmin"
+    "create:users": "ts-node ./scripts/createDefaultUsers"
   },
   "dependencies": {
     "@nestjs/cache-manager": "^2.2.1",
