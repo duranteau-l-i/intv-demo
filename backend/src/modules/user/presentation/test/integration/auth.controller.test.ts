@@ -4,12 +4,15 @@ import request from 'supertest';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { JwtModule } from '@nestjs/jwt';
+import { CacheModule } from '@nestjs/cache-manager';
+import * as redisStore from 'cache-manager-ioredis';
 
 import { AccessTokenStrategy, RefreshTokenStrategy } from '@common/guards';
 import { ErrorType } from '@common/errors/CustomError';
 
 import UserRepository from '../../../infrastructure/repositories/UserRepository';
 import UserEntity from '../../../infrastructure/repositories/entities/User.entity';
+import UserCache from '../../../infrastructure/caches/UserCache';
 import { DataSource } from 'typeorm';
 import { Role } from '../../../domain/model';
 import AuthController from '../../auth.controller';
@@ -40,6 +43,11 @@ describe('Auth', () => {
           entities: [UserEntity],
           synchronize: true,
         }),
+        CacheModule.register({
+          store: redisStore,
+          host: process.env.REDIS_TEST_URL,
+          port: process.env.REDIS_TEST_PORT,
+        }),
         TypeOrmModule.forFeature([UserEntity]),
         JwtModule.register({}),
       ],
@@ -49,6 +57,10 @@ describe('Auth', () => {
         {
           provide: 'UserRepository',
           useClass: UserRepository,
+        },
+        {
+          provide: 'UserCache',
+          useClass: UserCache,
         },
         AccessTokenStrategy,
         RefreshTokenStrategy,

@@ -5,6 +5,8 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { JwtModule } from '@nestjs/jwt';
 import { DataSource } from 'typeorm';
+import { CacheModule } from '@nestjs/cache-manager';
+import * as redisStore from 'cache-manager-ioredis';
 
 import { ErrorType } from '@common/errors/CustomError';
 import { AccessTokenStrategy, RefreshTokenStrategy } from '@common/guards';
@@ -12,9 +14,9 @@ import { AccessTokenStrategy, RefreshTokenStrategy } from '@common/guards';
 import UserCommands from '../../../application/user.commands';
 import UserQueries from '../../../application/user.queries';
 import UserRepository from '../../../infrastructure/repositories/UserRepository';
+import UserCache from '../../../infrastructure/caches/UserCache';
 import UserController from '../../user.controller';
 import UserEntity from '../../../infrastructure/repositories/entities/User.entity';
-import UserCache from 'src/modules/user/infrastructure/caches/UserCache';
 import { Role } from '../../../domain/model';
 import UserError from '../../../domain/error';
 import AuthController from '../../auth.controller';
@@ -43,6 +45,11 @@ describe('User', () => {
           database: process.env.DB_DATABASE_TEST,
           entities: [UserEntity],
           synchronize: true,
+        }),
+        CacheModule.register({
+          store: redisStore,
+          host: process.env.REDIS_TEST_URL,
+          port: process.env.REDIS_TEST_PORT,
         }),
         TypeOrmModule.forFeature([UserEntity]),
         JwtModule.register({}),

@@ -35,6 +35,17 @@ services:
     networks:
       - webnet
 
+  redis_test:
+    image: redis:alpine
+    container_name: 'intv-demo-redis-test'
+    restart: always
+    ports:
+      - '6380:6379'
+    volumes:
+      - ./docker-compose-data:/var/lib/cache/data
+    networks:
+      - webnet
+
 networks:
   db:
     driver: local

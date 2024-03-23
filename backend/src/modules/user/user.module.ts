@@ -21,8 +21,8 @@ import AuthController from './presentation/auth.controller';
     JwtModule.register({}),
     CacheModule.register({
       store: redisStore,
-      host: 'localhost',
-      port: 6379,
+      host: process.env.REDIS_URL,
+      port: process.env.REDIS_PORT,
     }),
   ],
   providers: [
