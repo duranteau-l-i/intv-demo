@@ -11,9 +11,10 @@ import { AccessTokenStrategy, RefreshTokenStrategy } from '@common/guards';
 
 import UserCommands from '../../../application/user.commands';
 import UserQueries from '../../../application/user.queries';
-import UserRepository from '../../../infrastructure/UserRepository';
+import UserRepository from '../../../infrastructure/repositories/UserRepository';
 import UserController from '../../user.controller';
-import UserEntity from '../../../infrastructure/entities/User.entity';
+import UserEntity from '../../../infrastructure/repositories/entities/User.entity';
+import UserCache from 'src/modules/user/infrastructure/caches/UserCache';
 import { Role } from '../../../domain/model';
 import UserError from '../../../domain/error';
 import AuthController from '../../auth.controller';
@@ -54,6 +55,10 @@ describe('User', () => {
         {
           provide: 'UserRepository',
           useClass: UserRepository,
+        },
+        {
+          provide: 'UserCache',
+          useClass: UserCache,
         },
         AccessTokenStrategy,
         RefreshTokenStrategy,

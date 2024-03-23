@@ -5,16 +5,16 @@ import {
 } from '@common/types';
 import CustomError, { ErrorType } from '@common/errors/CustomError';
 
-import { User } from '../domain/model';
+import { User } from '../../domain/model';
 import IUserRepository, {
   USER_ORDER_DEFAULT_VALUE,
   USER_ORDER_VALUES,
-} from '../domain/user.repository';
+} from '../../domain/user.repository';
 import { InjectDataSource } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
 import UserEntity from './entities/User.entity';
 import { userToDomain } from './mappers/user.mapper';
-import UserError from '../domain/error';
+import UserError from '../../domain/error';
 
 class UserRepository implements IUserRepository {
   constructor(

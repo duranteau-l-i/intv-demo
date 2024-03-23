@@ -3,7 +3,8 @@ import { ConfigModule } from '@nestjs/config';
 
 import UserQueries from '../../../application/user.queries';
 import UserCommands from '../../../application/user.commands';
-import UserInMemoryRepository from '../../../infrastructure/UserInMemoryRepository';
+import UserInMemoryRepository from '../../../infrastructure/repositories/UserInMemoryRepository';
+import UserInMemoryCache from '../../../infrastructure/caches/UserInMemoryCache';
 
 import { OrderBy } from '@common/types/pagination';
 import { ErrorType } from '@common/errors/CustomError';
@@ -30,9 +31,11 @@ describe('User', () => {
   let userQueries: UserQueries;
   let userCommands: UserCommands;
   let userRepository: UserInMemoryRepository;
+  let userCache: UserInMemoryCache;
 
   beforeAll(async () => {
     userRepository = new UserInMemoryRepository();
+    userCache = new UserInMemoryCache();
 
     const app: TestingModule = await Test.createTestingModule({
       imports: [
@@ -47,6 +50,10 @@ describe('User', () => {
           provide: 'UserRepository',
           useValue: userRepository,
         },
+        {
+          provide: 'UserCache',
+          useValue: userCache,
+        },
       ],
     }).compile();
 
@@ -56,11 +63,13 @@ describe('User', () => {
 
   beforeEach(() => {
     userRepository.seedUsers([]);
+    userCache.seedUsers(new Map());
   });
 
   describe('getUsers', () => {
     it('should return a empty list', async () => {
       userRepository.seedUsers([]);
+      userCache.seedUsers(new Map());
 
       const users = await userQueries.getUsers(reqUser);
 
@@ -77,6 +86,7 @@ describe('User', () => {
 
     it('should return an error access denied', async () => {
       userRepository.seedUsers([]);
+      userCache.seedUsers(new Map());
 
       await expect(
         userQueries.getUsers({ ...reqUser, role: Role.user }),
@@ -104,6 +114,7 @@ describe('User', () => {
       });
 
       userRepository.seedUsers([user1, user2]);
+      userCache.seedUsers(new Map());
 
       const users = await userQueries.getUsers(reqUser);
 

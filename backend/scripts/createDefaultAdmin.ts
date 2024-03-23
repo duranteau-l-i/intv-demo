@@ -3,7 +3,7 @@ import * as argon2 from 'argon2';
 import * as dotenv from 'dotenv';
 dotenv.config();
 
-import UserEntity from '../src/modules/user/infrastructure/entities/User.entity';
+import UserEntity from '../src/modules/user/infrastructure/repositories/entities/User.entity';
 
 const dataSource = new DataSource({
   type: 'postgres',

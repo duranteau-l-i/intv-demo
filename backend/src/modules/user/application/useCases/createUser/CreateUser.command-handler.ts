@@ -5,9 +5,13 @@ import { User } from '../../../domain/model';
 import UserError from '../../../domain/error';
 import IUserRepository from '../../../domain/user.repository';
 import CreateUserCommand from './CreateUser.command';
+import IUserCache from 'src/modules/user/domain/user.cache';
 
 class CreateUserCommandHandler implements ICommandHandler {
-  constructor(private userRepository: IUserRepository) {}
+  constructor(
+    private userRepository: IUserRepository,
+    private userCache: IUserCache,
+  ) {}
 
   async handle(command: CreateUserCommand): Promise<User> {
     await command.createUserEntity();
@@ -22,7 +26,11 @@ class CreateUserCommandHandler implements ICommandHandler {
       });
     }
 
-    return this.userRepository.createUser(command.user);
+    const user = await this.userRepository.createUser(command.user);
+
+    await this.userCache.addUser(user);
+
+    return user;
   }
 }
 

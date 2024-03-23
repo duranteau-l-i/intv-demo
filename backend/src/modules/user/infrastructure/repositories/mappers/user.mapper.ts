@@ -1,4 +1,4 @@
-import { User, Role } from '../../domain/model/';
+import { User, Role } from '../../../domain/model';
 import UserEntity from '../entities/User.entity';
 
 export const userToDomain = (user: UserEntity): User => {

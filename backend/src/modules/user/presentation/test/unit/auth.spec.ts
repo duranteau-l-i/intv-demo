@@ -6,7 +6,7 @@ import { ErrorType } from '@common/errors/CustomError';
 import { AccessTokenStrategy, RefreshTokenStrategy } from '@common/guards';
 import Hash from '@utils/Hash';
 
-import UserInMemoryRepository from '../../../infrastructure/UserInMemoryRepository';
+import UserInMemoryRepository from '../../../infrastructure/repositories/UserInMemoryRepository';
 import { User, Role, UserProps } from '../../../domain/model';
 import AuthCommands from '../../../application/auth.commands';
 import Password from '../../../domain/model/Password';

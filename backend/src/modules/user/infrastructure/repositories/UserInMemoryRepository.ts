@@ -5,12 +5,12 @@ import {
   pagination,
 } from '@common/types';
 
-import UserError from '../domain/error';
-import { User } from '../domain/model';
+import UserError from '../../domain/error';
+import { User } from '../../domain/model';
 import IUserRepository, {
   USER_ORDER_DEFAULT_VALUE,
   USER_ORDER_VALUES,
-} from '../domain/user.repository';
+} from '../../domain/user.repository';
 
 class UserRepository implements IUserRepository {
   users: User[] = [];

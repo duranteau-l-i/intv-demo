@@ -1,10 +1,14 @@
 import { ICommandHandler } from '@common/domain/CommandHandler';
 import { User } from '../../../domain/model';
-import IUserRepository from '../../../domain/user.repository';
 import UpdateUserCommand from './UpdateUser.command';
+import IUserRepository from '../../../domain/user.repository';
+import IUserCache from '../../../domain/user.cache';
 
 class UpdateUserCommandHandler implements ICommandHandler {
-  constructor(private userRepository: IUserRepository) {}
+  constructor(
+    private userRepository: IUserRepository,
+    private userCache: IUserCache,
+  ) {}
 
   async handle(command: UpdateUserCommand): Promise<User> {
     const user = await this.userRepository.getUserById(command.id);
@@ -12,7 +16,11 @@ class UpdateUserCommandHandler implements ICommandHandler {
     if (command.firstName) user.firstName = command.firstName;
     if (command.lastName) user.lastName = command.lastName;
 
-    return this.userRepository.updateUser(user);
+    const userUpdated = await this.userRepository.updateUser(user);
+
+    await this.userCache.addUser(userUpdated);
+
+    return userUpdated;
   }
 }
 

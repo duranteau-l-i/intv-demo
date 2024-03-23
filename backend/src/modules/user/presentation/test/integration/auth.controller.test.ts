@@ -8,8 +8,8 @@ import { JwtModule } from '@nestjs/jwt';
 import { AccessTokenStrategy, RefreshTokenStrategy } from '@common/guards';
 import { ErrorType } from '@common/errors/CustomError';
 
-import UserRepository from '../../../infrastructure/UserRepository';
-import UserEntity from '../../../infrastructure/entities/User.entity';
+import UserRepository from '../../../infrastructure/repositories/UserRepository';
+import UserEntity from '../../../infrastructure/repositories/entities/User.entity';
 import { DataSource } from 'typeorm';
 import { Role } from '../../../domain/model';
 import AuthController from '../../auth.controller';
